@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual ISH from Daniocell: cartoon-map prototype</title>
+<style>
+  :root{
+    --bg:#faf7f1; --ink:#22201c; --muted:#6b655b; --line:#e2dacb; --card:#ffffff;
+    --tissue:#efe3c8; --tissue-edge:#b49d6f; --yolk:#f6e7b8;
+    --stain:#4b1d6b; --obs:#0f8b8d;
+    --ok:#2f7d4f; --part:#c08a1e; --bad:#b4442f; --na:#9a948a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  header{padding:28px 32px 12px;max-width:1240px;margin:auto}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+  h2{font-size:19px;margin:0 0 10px}
+  h3{font-size:15px;margin:14px 0 6px}
+  .sub{color:var(--muted);margin:0}
+  .banner{margin:14px 0 0;padding:10px 14px;border-left:4px solid var(--part);background:#fff8e8;border-radius:6px;font-size:14px}
+  main{max-width:1240px;margin:auto;padding:0 32px 48px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-top:18px}
+  .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-start}
+  .ctl label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:14px;font-style:italic}
+  .chip.plain{font-style:normal}
+  .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--obs);outline-offset:2px}
+  .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:20px;margin-top:16px}
+  @media (max-width:980px){.layout{grid-template-columns:1fr}}
+  .mapwrap{position:relative;background:#fbf8f2;border:1px solid var(--line);border-radius:10px;padding:6px}
+  svg{width:100%;height:auto;display:block}
+  .region{transition:fill-opacity .25s, stroke-opacity .25s}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin:8px 4px 2px}
+  .sw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+  .tip{position:absolute;pointer-events:none;background:#22201c;color:#fff;font-size:12.5px;padding:8px 10px;border-radius:6px;max-width:280px;opacity:0;transition:opacity .12s;z-index:5}
+  .tip b{color:#ffd98a}
+  .card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .verdict{display:inline-block;padding:3px 10px;border-radius:999px;color:#fff;font-weight:600;font-size:13px}
+  .v-Concordant{background:var(--ok)} .v-Partial{background:var(--part)} .v-Discordant{background:var(--bad)} .v-No{background:var(--na)}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:3px 10px;font-size:14px;margin-top:8px}
+  .kv div:nth-child(odd){color:var(--muted)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .bar{display:inline-block;height:8px;background:var(--stain);border-radius:2px;vertical-align:middle}
+  .tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin:2px 4px 2px 0;background:#faf7f1}
+  .muted{color:var(--muted)}
+  .matrix td,.matrix th{text-align:center}
+  .matrix td:first-child,.matrix th:first-child{text-align:left}
+  .cell{display:block;border-radius:6px;padding:6px 4px;color:#fff;font-weight:600;cursor:pointer;font-size:13px;border:0;width:100%;font-family:inherit}
+  .cell small{display:block;font-weight:400;opacity:.9;font-size:11px}
+  .cell.sel{outline:3px solid var(--ink);outline-offset:1px}
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 4px}
+  .stat{flex:1 1 140px;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .stat .n{font-size:24px;font-weight:700}
+  .stat .l{font-size:12.5px;color:var(--muted)}
+  .decision{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+  @media (max-width:880px){.decision{grid-template-columns:1fr}}
+  .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .opt.rec{border:2px solid var(--ok);background:#f3faf5}
+  .opt h4{margin:0 0 6px;font-size:15px}
+  details{margin-top:8px} summary{cursor:pointer;color:var(--obs);font-weight:600}
+  a{color:var(--obs)}
+  footer{max-width:1240px;margin:auto;padding:0 32px 40px;color:var(--muted);font-size:13px}
+  code{background:#f2ede3;padding:1px 5px;border-radius:4px;font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Virtual ISH from single-cell data</h1>
+  <p class="sub">Approach 1 prototype: a Daniocell cell-type map painted onto a cartoon embryo, scored against Thisse whole-mount ISH annotations (ZFIN).</p>
+  <div class="banner"><b>Research and hypothesis generation only.</b> The purple maps are <i>predictions</i> from cluster-level scRNA-seq averages, not images of real embryos. Check every pattern against the original ISH before you use it.</div>
+</header>
+
+<main>
+<section aria-labelledby="explorer-h">
+  <h2 id="explorer-h">1. Explore a gene</h2>
+  <div class="controls">
+    <div class="ctl"><label>Gene</label><div class="chips" id="geneChips"></div></div>
+    <div class="ctl"><label>Stage</label><div class="chips" id="stageChips"></div></div>
+    <div class="ctl"><label>View</label><div class="chips" id="modeChips"></div></div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="mapwrap" id="mapwrap">
+        <svg id="embryo" viewBox="40 84 865 240" role="img" aria-labelledby="svgTitle">
+          <title id="svgTitle">Schematic lateral view of a zebrafish embryo with predicted and observed expression regions</title>
+          <defs>
+            <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#0f8b8d" stroke-width="2.2"/>
+            </pattern>
+          </defs>
+          <g id="scene"></g>
+        </svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="legend">
+        <span><span class="sw" style="background:#4b1d6b"></span>Predicted (Daniocell): darker = higher</span>
+        <span><span class="sw" style="background:#4b1d6b;opacity:.28"></span>Weak, shown but not scored</span>
+        <span><span class="sw" style="background:url(#);border:2px dashed #0f8b8d;background-color:#d6eeee"></span>Observed (Thisse ISH, ZFIN)</span>
+      </div>
+      <p class="muted" style="font-size:13px;margin:6px 4px 0">Schematic, not to scale. One body plan is reused for all three stages. Point at a region to see the clusters and ISH terms behind it.</p>
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin-top:0">Observed ISH terms (Thisse)</h3>
+        <div id="ishTerms"></div>
+        <div id="links" style="margin-top:10px;font-size:13.5px"></div>
+      </div>
+    </div>
+
+    <div id="panel">
+      <div class="card" id="scoreCard"></div>
+      <div class="card">
+        <h3 style="margin-top:0">Cluster → region table</h3>
+        <table id="clusterTable"></table>
+        <p class="muted" style="font-size:12.5px;margin:8px 0 0">Called = ≥<span id="tP"></span>% of cells and ≥<span id="tE"></span> relative mean expression. Grey rows are shown faintly but not scored.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="matrix-h">
+  <h2 id="matrix-h">2. Agreement score: predicted vs observed</h2>
+  <p class="muted" style="margin-top:0">Score = Jaccard overlap of cartoon regions (shared regions ÷ all regions named by either source). <b>Concordant</b> ≥ 0.67, <b>Partial</b> 0.25–0.66, <b>Discordant</b> &lt; 0.25. Click a cell to load it above.</p>
+  <div class="stats" id="stats"></div>
+  <div style="overflow-x:auto"><table class="matrix" id="matrix"></table></div>
+  <h3>Why predictions miss</h3>
+  <table id="failTable"></table>
+</section>
+
+<section aria-labelledby="dec-h">
+  <h2 id="dec-h">3. Decision: is approach 2 or 3 worth it?</h2>
+  <div id="decisionText"></div>
+  <div class="decision">
+    <div class="opt rec">
+      <h4>Next: Approach 1b (recommended)</h4>
+      <p style="margin:0">Map Daniocell's <b>sub-clusters</b> (e.g., <code>neur.6</code> "progenitors – midbrain and hindbrain", <code>neur.18</code> "hindbrain – lateral") to cartoon sub-regions (MHB, rhombomeres, epiphysis, optic stalk). Same pipeline, finer table. A quick check of <i>egr2b</i> shows strong signal in <code>neur.6</code> that the coarse "neural" group dilutes.</p>
+    </div>
+    <div class="opt">
+      <h4>Approach 2: landmark mapping</h4>
+      <p style="margin:0">Worth it <b>only for the brain and neural tube</b>, where ISH patterns are finer than any cluster. It won't fix genes Daniocell barely detects, and it needs a curated landmark-gene panel for each stage.</p>
+    </div>
+    <div class="opt">
+      <h4>Approach 3: spatial-reference mapping</h4>
+      <p style="margin:0">Not worth it yet. It fixes the same resolution misses as approach 2 at much higher cost, and only for stages a spatial atlas covers. Revisit if approach 1b still misses along the head-to-tail axis.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="meth-h">
+  <h2 id="meth-h">Methods and caveats</h2>
+  <ul>
+    <li><b>Predicted.</b> For each gene, Daniocell's "all cells" dot plot was parsed (dot size → % cells expressing; dot color → mean expression on that gene's own color scale, rescaled 0–1, approximate). Each tissue group was assigned to one cartoon region. A region is <i>called</i> when any of its groups has ≥ <span class="tP2"></span>% of cells expressing and ≥ <span class="tE2"></span> relative expression.</li>
+    <li><b>Observed.</b> ZFIN wild-type expression annotations from the Thisse high-throughput ISH screens (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22), grouped into Thisse stage bins and mapped to the same regions.</li>
+    <li><b>Stage matching.</b> Segmentation = Daniocell 14–21 hpf vs Thisse 14–19 somites. Pharyngula = 24–34 hpf vs 20–25 somites to Prim-25. Hatching = 48–58 hpf vs High-pec to Long-pec (42–48 hpf, so slightly earlier).</li>
+    <li><b>"No ISH data"</b> means Thisse annotated nothing for that gene at that stage. That isn't proof of absence, so those cells aren't scored.</li>
+    <li><b>Known biases.</b> Ambient RNA (e.g., <i>krt4</i> shows up at low levels in almost every cluster), dissociation loss, dropout of low-expressed genes, incomplete ISH annotation (e.g., <i>pax2a</i> pronephros isn't annotated at 14–19 somites), and colors read approximately from plots rather than raw counts.</li>
+  </ul>
+  <details><summary>Full cluster → region mapping</summary><table id="mapTable" style="margin-top:8px"></table></details>
+  <details><summary>ISH term → region mapping</summary><table id="termTable" style="margin-top:8px"></table></details>
+</section>
+</main>
+
+<footer>
+  Data: <a href="https://daniocell.nichd.nih.gov/" target="_blank" rel="noopener">Daniocell</a> (Sur et al., 2023, <i>Dev Cell</i>);
+  <a href="https://zfin.org/downloads" target="_blank" rel="noopener">ZFIN</a> wild-type expression download (release 2026-11-19);
+  Thisse ISH collection, also browsable in <a href="https://zebrahub.sf.czbiohub.org/gene2fish" target="_blank" rel="noopener">Zebrahub gene2fish</a>.
+  Prototype by Anil K. Challa. Research and hypothesis generation only.
+</footer>
+
+<script id="data" type="application/json">/*DATA*/</script>
+<script>
+/*LOGIC*/
+</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const GENES = Object.keys(D.genes);
+const STAGES = ["A","B","C"];
+const state = {gene: "pax2a", stage: "B", mode: "overlay"};
+const NS = "http://www.w3.org/2000/svg";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- build the cartoon ---------- */
+function el(tag, attrs, parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);(parent||scene).appendChild(e);return e;}
+const scene = document.getElementById('scene');
+const BODY = "M60 170 C54 122 118 96 200 104 C262 110 332 116 420 121 L760 139 C820 144 866 154 882 165 C866 177 820 183 760 187 L540 199 C480 204 420 209 380 211 L300 213 C250 215 200 216 150 213 C100 210 62 202 60 170 Z";
+function regionGroup(r){const g=el('g',{class:'region','data-r':r});return g;}
+function buildScene(){
+  // fin fold behind body
+  let g=regionGroup('fins');
+  el('path',{d:"M560 126 C680 112 820 126 896 165 C820 205 680 214 560 203 Z"},g);
+  el('ellipse',{cx:305,cy:196,rx:22,ry:8,transform:"rotate(-18 305 196)"},g);
+  // yolk + extension
+  el('ellipse',{cx:232,cy:258,rx:142,ry:62,fill:'var(--yolk)',stroke:'#d9c48a','stroke-width':1.5});
+  el('path',{d:"M330 226 C400 222 480 212 548 203 C524 222 432 242 352 270 Z",fill:'var(--yolk)',stroke:'#d9c48a','stroke-width':1.5});
+  // body tissue
+  el('path',{d:BODY,fill:'var(--tissue)'});
+  // somites (tapering chevrons)
+  g=regionGroup('somites');
+  for(let x=268;x<820;x+=25){
+    const top=118+(x-260)*0.032, bot=203-(x-260)*0.036, mid=(top+bot)/2;
+    el('path',{d:`M${x} ${top} L${x+16} ${top} L${x+23} ${mid} L${x+16} ${bot} L${x} ${bot} L${x+7} ${mid} Z`},g);
+  }
+  g=regionGroup('brain');
+  el('path',{d:"M76 160 C74 126 120 108 182 112 C218 115 244 125 258 136 L253 151 C222 148 182 150 142 158 C110 163 90 169 76 160 Z"},g);
+  g=regionGroup('eye'); el('circle',{cx:126,cy:176,r:24},g);
+  g=regionGroup('olfactory'); el('circle',{cx:71,cy:181,r:7},g);
+  g=regionGroup('otic'); el('ellipse',{cx:230,cy:166,rx:13,ry:10},g);
+  g=regionGroup('arches');
+  [[160,190,24],[180,192,22],[200,194,20]].forEach(([x,y,h])=>el('rect',{x,y,width:14,height:h,rx:6},g));
+  g=regionGroup('heart'); el('ellipse',{cx:118,cy:226,rx:22,ry:13},g);
+  g=regionGroup('hatching'); el('ellipse',{cx:80,cy:207,rx:13,ry:6},g);
+  g=regionGroup('liver'); el('ellipse',{cx:258,cy:204,rx:18,ry:9},g);
+  g=regionGroup('gut'); el('path',{d:"M276 203 L560 196 L560 201 L276 209 Z"},g);
+  g=regionGroup('pronephros'); el('path',{d:"M296 192 L568 187 L572 192 L296 197 Z"},g);
+  g=regionGroup('vasculature'); el('path',{d:"M262 172 L842 167 L842 170 L262 176 Z"},g);
+  g=regionGroup('blood'); el('ellipse',{cx:625,cy:183,rx:72,ry:5},g); el('circle',{cx:132,cy:222,r:4},g); el('circle',{cx:108,cy:230,r:4},g);
+  g=regionGroup('notochord'); el('path',{d:"M248 150 L852 159 C858 161 858 165 852 166 L248 163 C243 160 243 153 248 150 Z"},g);
+  g=regionGroup('spinal_cord'); el('path',{d:"M255 136 L846 152 L848 157 L255 148 Z"},g);
+  g=regionGroup('psm'); el('ellipse',{cx:846,cy:163,rx:26,ry:12},g);
+  g=regionGroup('lateral_line'); for(let x=300;x<800;x+=62) el('circle',{cx:x,cy:157+(x-300)*0.012,r:3.6},g);
+  g=regionGroup('pigment');
+  for(let x=280;x<820;x+=38){el('circle',{cx:x,cy:121+(x-260)*0.031,r:3},g);el('circle',{cx:x+12,cy:199-(x-260)*0.032,r:3},g);}
+  g=regionGroup('myeloid'); [[180,262],[222,284],[262,250],[302,272],[344,256],[196,236],[150,282]].forEach(([cx,cy])=>el('circle',{cx,cy,r:4.2},g));
+  // skin outline last
+  g=regionGroup('skin'); el('path',{d:BODY,fill:'none','stroke-width':5},g);
+  // labels
+  const labs=[["brain",150,96],["eye",126,214],["otic",230,146],["heart",80,250],["notochord",600,150],["somites",470,112],["pronephros",420,226],["tail bud",842,190],["yolk",230,300]];
+  labs.forEach(([t,x,y])=>{const tx=el('text',{x,y,'text-anchor':'middle','font-size':11,fill:'#8a7a5a','pointer-events':'none'});tx.textContent=t;});
+}
+buildScene();
+
+/* ---------- controls ---------- */
+function chips(id, items, key, italic=true){
+  const box=document.getElementById(id); box.innerHTML="";
+  items.forEach(([val,label])=>{
+    const b=document.createElement('button'); b.className='chip'+(italic?'':' plain'); b.textContent=label;
+    b.setAttribute('aria-pressed', state[key]===val); b.onclick=()=>{state[key]=val; render();};
+    box.appendChild(b);
+  });
+}
+const stageLabel = s => `${D.meta.stages[s].label} (${D.meta.stages[s].daniocell})`;
+
+/* ---------- render ---------- */
+function render(){
+  chips('geneChips', GENES.map(g=>[g,g]), 'gene');
+  chips('stageChips', STAGES.map(s=>[s,stageLabel(s)]), 'stage', false);
+  chips('modeChips', [["pred","Predicted"],["obs","Observed"],["overlay","Overlay"]], 'mode', false);
+  const gene=D.genes[state.gene], r=scoreCell(gene, state.stage);
+  // paint
+  document.querySelectorAll('.region').forEach(g=>{
+    const key=g.dataset.r, p=r.pred.regions[key], o=r.obs.regions[key];
+    const isSkin = key==='skin';
+    let fill='var(--tissue)', fo=1, stroke='#c9b487', sw=0.9, dash='';
+    if(isSkin){ fill='none'; stroke='var(--tissue-edge)'; sw=2; }
+    if(key==='fins'){ fill='#f4ecdb'; }
+    const showPred = state.mode!=='obs' && p;
+    const showObs  = state.mode!=='pred' && o;
+    if(showPred){
+      const a = p.strong ? 0.25+0.75*p.inten : 0.10+0.25*p.inten;
+      if(isSkin){ stroke='var(--stain)'; sw=5; g.style.strokeOpacity=a; } else { fill='var(--stain)'; fo=a; }
+    }
+    if(showObs && state.mode==='obs' && !isSkin){ fill='url(#hatch)'; fo=1; }
+    if(showObs){ stroke = 'var(--obs)'; sw = isSkin? (showPred?5:4) : 2.4; dash = isSkin && showPred ? '10 6' : '5 3'; if(isSkin && !showPred) g.style.strokeOpacity=1; }
+    if(!isSkin) g.style.strokeOpacity=1;
+    g.style.fill=fill; g.style.fillOpacity=fo; g.style.stroke=stroke; g.style.strokeWidth=sw; g.style.strokeDasharray=dash;
+    g.setAttribute('tabindex', (p||o)?0:-1);
+  });
+  // score card
+  const vcls = r.verdict.startsWith('No')?'v-No':'v-'+r.verdict;
+  const nm = x=>x.length? x.map(k=>REGIONS[k]).join(', ') : '<span class="muted">none</span>';
+  const TAGTXT={resolution:"ISH pattern is finer than any cluster",
+    "weak-signal":"Detected, but below the calling threshold",
+    "not-detected":"Not detected in matching clusters (dropout or dilution)",
+    "extra-prediction":"Predicted where ISH shows nothing (ambient RNA, doublets or incomplete annotation)",
+    "unmapped-cluster":"Signal in a group with no cartoon region"};
+  document.getElementById('scoreCard').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <div><span style="font-size:20px;font-weight:700;font-style:italic">${esc(state.gene)}</span>
+      <div class="muted" style="font-size:13px">${esc(gene.name)}</div></div>
+      <span class="verdict ${vcls}">${r.verdict}${r.jaccard!==null?' · '+r.jaccard.toFixed(2):''}</span>
+    </div>
+    <div class="kv">
+      <div>Stage</div><div>${esc(D.meta.stages[state.stage].daniocell)} scRNA vs ${esc(D.meta.stages[state.stage].thisse)} ISH</div>
+      <div>Predicted</div><div>${nm(r.P)}</div>
+      <div>Observed</div><div>${nm(r.O)}</div>
+      <div>Missed</div><div>${nm(r.missed)}</div>
+      <div>Extra</div><div>${nm(r.extra)}</div>
+    </div>
+    ${r.tags.length && r.jaccard!==null?'<div style="margin-top:8px">'+r.tags.map(t=>`<span class="tag">${TAGTXT[t]}</span>`).join('')+'</div>':''}`;
+  // cluster table
+  const rows=(gene.dc[state.stage]||[]).map(([cl,p,e])=>{
+    const reg=CLUSTER_TO_REGION[cl]; const called=p>=STRONG.p&&e>=STRONG.e; const shown=p>=SHOWN.p&&e>=SHOWN.e;
+    return `<tr style="${shown?'':'color:#aaa'}"><td>${esc(cl)}</td><td class="num">${p}</td>
+      <td><span class="bar" style="width:${Math.round(e*60)}px;opacity:${shown?1:.35}"></span> ${e.toFixed(2)}</td>
+      <td>${reg?esc(REGIONS[reg]):'<i class="muted">unmapped</i>'}</td><td>${called?'✔':''}</td></tr>`;}).join('');
+  document.getElementById('clusterTable').innerHTML = `<tr><th>Daniocell group</th><th>% cells</th><th>Rel. mean</th><th>Cartoon region</th><th>Called</th></tr>`+
+    (rows || `<tr><td colspan="5" class="muted">No group reaches 5% of cells at this stage.</td></tr>`);
+  // ISH
+  const terms=gene.ish[state.stage]||[];
+  document.getElementById('ishTerms').innerHTML = terms.length ?
+    '<table><tr><th>ZFIN term</th><th>Cartoon region</th></tr>'+terms.map(t=>{const m=TERM_TO_REGION[t];return `<tr><td>${esc(t)}${m&&m.fine?' <span class="tag">finer than clusters</span>':''}</td><td>${m&&m.r.length?m.r.map(k=>esc(REGIONS[k])).join(', '):'<i class="muted">not mappable</i>'}</td></tr>`}).join('')+'</table>'
+    : '<p class="muted" style="margin:0">No Thisse annotation at this stage, so this cell isn\'t scored.</p>';
+  const L=state.gene[0].toUpperCase();
+  document.getElementById('links').innerHTML =
+    `<a href="https://daniocell.nichd.nih.gov/gene/${L}/${state.gene}/${state.gene}.html" target="_blank" rel="noopener">Daniocell page</a> ·
+     <a href="https://zfin.org/${gene.zfin}" target="_blank" rel="noopener">ZFIN gene page (expression and ISH figures)</a> ·
+     <a href="https://zebrahub.sf.czbiohub.org/g2f" target="_blank" rel="noopener">gene2fish</a>`;
+  renderMatrix();
+}
+
+/* ---------- tooltip ---------- */
+const tip=document.getElementById('tip'), wrap=document.getElementById('mapwrap');
+function showTip(ev, g){
+  const key=g.dataset.r, gene=D.genes[state.gene], r=scoreCell(gene,state.stage);
+  const p=r.pred.regions[key], o=r.obs.regions[key];
+  let h=`<b>${esc(REGIONS[key])}</b><br>`;
+  h+= p ? 'Predicted: '+p.clusters.map(c=>`${esc(c.cl)} (${c.p}%, ${c.e.toFixed(2)})`).join('; ')+(p.strong?'':' (weak)') : 'Predicted: none';
+  h+= '<br>'+(o ? 'Observed: '+o.map(esc).join(', ') : 'Observed: none');
+  tip.innerHTML=h; tip.style.opacity=1;
+  const b=wrap.getBoundingClientRect(); let x=ev.clientX-b.left+12, y=ev.clientY-b.top+12;
+  if(x>b.width-290) x=b.width-290; tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+document.querySelectorAll('.region').forEach(g=>{
+  g.addEventListener('mousemove',ev=>showTip(ev,g)); g.addEventListener('mouseleave',()=>tip.style.opacity=0);
+  g.addEventListener('focus',()=>{const bb=g.getBoundingClientRect();showTip({clientX:bb.left+bb.width/2,clientY:bb.top+bb.height/2},g);});
+  g.addEventListener('blur',()=>tip.style.opacity=0);
+});
+
+/* ---------- matrix + decision ---------- */
+function renderMatrix(){
+  const COL={Concordant:'var(--ok)',Partial:'var(--part)',Discordant:'var(--bad)','No ISH data':'var(--na)'};
+  let html='<tr><th>Gene</th>'+STAGES.map(s=>`<th>${esc(stageLabel(s))}</th>`).join('')+'</tr>';
+  const tally={}, tags={}, js=[];
+  for(const g of GENES){
+    html+=`<tr><td><i>${g}</i></td>`;
+    for(const s of STAGES){
+      const r=scoreCell(D.genes[g],s); tally[r.verdict]=(tally[r.verdict]||0)+1;
+      if(r.jaccard!==null){js.push(r.jaccard); r.tags.forEach(t=>tags[t]=(tags[t]||0)+1);}
+      const sel=(g===state.gene&&s===state.stage)?' sel':'';
+      html+=`<td><button class="cell${sel}" style="background:${COL[r.verdict]}" data-g="${g}" data-s="${s}" aria-label="${g} ${stageLabel(s)}: ${r.verdict}">${r.verdict}<small>${r.jaccard===null?'not scored':'J = '+r.jaccard.toFixed(2)}</small></button></td>`;
+    }
+    html+='</tr>';
+  }
+  const m=document.getElementById('matrix'); m.innerHTML=html;
+  m.querySelectorAll('.cell').forEach(b=>b.onclick=()=>{state.gene=b.dataset.g;state.stage=b.dataset.s;render();document.getElementById('explorer-h').scrollIntoView({behavior:'smooth'});});
+  const n=js.length, mean=js.reduce((a,b)=>a+b,0)/n;
+  document.getElementById('stats').innerHTML=[
+    [n,'gene × stage pairs scored'],[mean.toFixed(2),'mean Jaccard'],
+    [tally.Concordant||0,'concordant'],[tally.Partial||0,'partial'],[tally.Discordant||0,'discordant']
+  ].map(([v,l])=>`<div class="stat"><div class="n">${v}</div><div class="l">${l}</div></div>`).join('');
+  const FIX={resolution:['ISH pattern is finer than any cluster (MHB, hindbrain, epiphysis, optic stalk)','Approach 1b / 2 / 3'],
+    'not-detected':['Not detected in the matching groups (dropout, or dilution in a large group)','Partly 1b; 2 and 3 can\'t add molecules'],
+    'weak-signal':['Detected, but below the calling threshold','Threshold tuning or 1b'],
+    'extra-prediction':['Predicted where ISH shows nothing (ambient RNA, doublets, incomplete annotation)','Ambient-RNA correction; not 2 or 3'],
+    'unmapped-cluster':['Signal in a group with no cartoon region (blastomeres, PGCs)','Add regions']};
+  document.getElementById('failTable').innerHTML='<tr><th>Failure mode</th><th class="num">Scored pairs affected</th><th>What would fix it</th></tr>'+
+    Object.keys(FIX).map(k=>`<tr><td>${FIX[k][0]}</td><td class="num">${tags[k]||0} / ${n}</td><td>${FIX[k][1]}</td></tr>`).join('');
+  document.getElementById('decisionText').innerHTML=`<p style="margin-top:0">Approach 1 matched ISH fully in <b>${tally.Concordant||0} of ${n}</b> scored pairs (mean Jaccard <b>${mean.toFixed(2)}</b>). It works well for genes confined to one tissue that Daniocell resolves as a single group: <i>cdh17</i> (pronephros), <i>gata1a</i> (blood), <i>mpx</i> (myeloid) and <i>tbxta</i> (notochord). It fails in two different ways, and they need different fixes. <b>Resolution</b> (${tags.resolution||0} pairs): brain sub-domains such as the MHB, rhombomeres and epiphysis get averaged into one "neural" group. Finer mapping fixes this. <b>Sensitivity</b> (${tags['not-detected']||0} pairs): genes like <i>crx</i> and <i>egr2b</i> before 48 hpf are expressed in too few dissociated cells. No spatial-mapping method can recover molecules that weren't captured.</p>`;
+}
+
+document.getElementById('tP').textContent=STRONG.p; document.getElementById('tE').textContent=STRONG.e;
+document.querySelectorAll('.tP2').forEach(e=>e.textContent=STRONG.p); document.querySelectorAll('.tE2').forEach(e=>e.textContent=STRONG.e);
+document.getElementById('mapTable').innerHTML='<tr><th>Daniocell group</th><th>Cartoon region</th></tr>'+Object.entries(CLUSTER_TO_REGION).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v?esc(REGIONS[v]):'<i class="muted">unmapped</i>'}</td></tr>`).join('');
+document.getElementById('termTable').innerHTML='<tr><th>ZFIN term</th><th>Cartoon region</th></tr>'+Object.entries(TERM_TO_REGION).map(([k,v])=>`<tr><td>${esc(k)}${v.fine?' <span class="tag">finer</span>':''}</td><td>${v.r.length?v.r.map(x=>esc(REGIONS[x])).join(', '):'<i class="muted">not mappable</i>'}</td></tr>`).join('');
+render();
+</script>
+</body>
+</html>
