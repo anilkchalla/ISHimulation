@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Virtual ISH from Daniocell: cartoon-map prototype</title>
+<title>ISHimulation Tool</title>
 <style>
   :root{
     --bg:#faf7f1; --ink:#22201c; --muted:#6b655b; --line:#e2dacb; --card:#ffffff;
     --tissue:#efe3c8; --tissue-edge:#b49d6f; --yolk:#f6e7b8;
-    --stain:#4b1d6b; --obs:#0f8b8d;
+    --stain:#0e8a7e; --obs:#7a4fa3; --link:#0e6f66;
     --ok:#2f7d4f; --part:#c08a1e; --bad:#b4442f; --na:#9a948a;
   }
   *{box-sizing:border-box}
@@ -27,7 +27,7 @@
   .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:14px;font-style:italic}
   .chip.plain{font-style:normal}
   .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .chip:focus-visible{outline:2px solid var(--obs);outline-offset:2px}
+  .chip:focus-visible{outline:2px solid var(--link);outline-offset:2px}
   .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:20px;margin-top:16px}
   @media (max-width:980px){.layout{grid-template-columns:1fr}}
   .mapwrap{position:relative;background:#fbf8f2;border:1px solid var(--line);border-radius:10px;padding:6px}
@@ -63,20 +63,19 @@
   .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .opt.rec{border:2px solid var(--ok);background:#f3faf5}
   .opt h4{margin:0 0 6px;font-size:15px}
-  details{margin-top:8px} summary{cursor:pointer;color:var(--obs);font-weight:600}
-  a{color:var(--obs)}
+  details{margin-top:8px} summary{cursor:pointer;color:var(--link);font-weight:600}
+  a{color:var(--link)}
   footer{max-width:1240px;margin:auto;padding:0 32px 40px;color:var(--muted);font-size:13px}
   code{background:#f2ede3;padding:1px 5px;border-radius:4px;font-size:12.5px}
 </style>
 </head>
 <body>
 <header>
-  <h1>Virtual ISH from single-cell data</h1>
-  <p class="sub">Approach 1 prototype: a Daniocell cell-type map painted onto a cartoon embryo, scored against Thisse whole-mount ISH annotations (ZFIN).</p>
-  <div class="banner"><b>Research and hypothesis generation only.</b> The purple maps are <i>predictions</i> from cluster-level scRNA-seq averages, not images of real embryos. Check every pattern against the original ISH before you use it.</div>
+  <h1>ISHimulation Tool</h1>
+  <p class="sub">Simulated whole-mount ISH from single-cell data. Approach 1 prototype: a Daniocell cell-type map painted onto a cartoon embryo, scored against Thisse whole-mount ISH annotations (ZFIN).</p>
+  <div class="banner"><b>Research and hypothesis generation only.</b> The teal maps are <i>predictions</i> from cluster-level scRNA-seq averages, not images of real embryos. Check every pattern against the original ISH before you use it.</div>
 </header>
-
-  <!-- ISHimulation abstract box: insert directly after </header> -->
+<!-- ISHimulation abstract box: insert directly after </header> -->
 <style>
   .abs-wrap{max-width:1240px;margin:18px auto 0;padding:0 32px}
   .abs-box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:center;
@@ -105,7 +104,7 @@
   </section>
 </div>
 <!-- end abstract box -->
-  
+
 <main>
 <section aria-labelledby="explorer-h">
   <h2 id="explorer-h">1. Explore a gene</h2>
@@ -122,7 +121,7 @@
           <title id="svgTitle">Schematic lateral view of a zebrafish embryo with predicted and observed expression regions</title>
           <defs>
             <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="6" stroke="#0f8b8d" stroke-width="2.2"/>
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#7a4fa3" stroke-width="2.2"/>
             </pattern>
           </defs>
           <g id="scene"></g>
@@ -130,9 +129,9 @@
         <div class="tip" id="tip"></div>
       </div>
       <div class="legend">
-        <span><span class="sw" style="background:#4b1d6b"></span>Predicted (Daniocell): darker = higher</span>
-        <span><span class="sw" style="background:#4b1d6b;opacity:.28"></span>Weak, shown but not scored</span>
-        <span><span class="sw" style="background:url(#);border:2px dashed #0f8b8d;background-color:#d6eeee"></span>Observed (Thisse ISH, ZFIN)</span>
+        <span><span class="sw" style="background:#0e8a7e"></span>Predicted (Daniocell): darker = higher</span>
+        <span><span class="sw" style="background:#0e8a7e;opacity:.28"></span>Weak, shown but not scored</span>
+        <span><span class="sw" style="background:url(#);border:2px dashed #7a4fa3;background-color:#ece3f5"></span>Observed (Thisse ISH, ZFIN)</span>
       </div>
       <p class="muted" style="font-size:13px;margin:6px 4px 0">Schematic, not to scale. One body plan is reused for all three stages. Point at a region to see the clusters and ISH terms behind it.</p>
       <div class="card" style="margin-top:12px">
@@ -199,7 +198,8 @@
   Data: <a href="https://daniocell.nichd.nih.gov/" target="_blank" rel="noopener">Daniocell</a> (Sur et al., 2023, <i>Dev Cell</i>);
   <a href="https://zfin.org/downloads" target="_blank" rel="noopener">ZFIN</a> wild-type expression download (release 2026-11-19);
   Thisse ISH collection, also browsable in <a href="https://zebrahub.sf.czbiohub.org/gene2fish" target="_blank" rel="noopener">Zebrahub gene2fish</a>.
-  Prototype by Anil K. Challa. Research and hypothesis generation only.
+  Prototype by Anil K. Challa (<a href="mailto:akchalla@uab.edu">akchalla@uab.edu</a>). Research and hypothesis generation only.<br>
+  <a href="https://github.com/anilkchalla/ISHimulation" target="_blank" rel="noopener">GitHub repository</a> · Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>. Data remain under their providers' terms.
 </footer>
 
 <script id="data" type="application/json">{"meta":{"daniocell_source":"Daniocell (Sur et al. 2023), per-gene 'all cells' dot plots (gene/<L>/<gene>/<gene>_dotplot_all.svg), parsed 2026-11-20. p = % cells expressing; e = mean expression scaled 0-1 to the gene's own Daniocell color bar (approximate, read from dot color).","zfin_source":"ZFIN wildtype-expression_fish.txt (release 2026-11-19), rows from Thisse et al. 2001/2004/2005/2008 high-throughput ISH (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22).","stages":{"A":{"label":"Segmentation","daniocell":"14-21 hpf","thisse":"14-19 somites"},"B":{"label":"Pharyngula","daniocell":"24-34 hpf","thisse":"20-25 somites to Prim-25"},"C":{"label":"Hatching","daniocell":"48-58 hpf","thisse":"High-pec to Long-pec"}}},"genes":{"cdh17":{"zfin":"ZDB-GENE-030910-3","name":"cadherin 17","dc":{"A":[["pronephros",88,0.81]],"B":[["pronephros",87,1.0],["liver",8,0.13]],"C":[["pronephros",84,0.98],["gut",32,0.13]]},"ish":{"A":["pronephric duct"],"B":["pronephric duct"],"C":["pronephric duct"]}},"crx":{"zfin":"ZDB-GENE-010403-1","name":"cone-rod homeobox","dc":{"A":[],"B":[],"C":[["eye",30,0.76]]},"ish":{"A":["epiphysis"],"B":["epiphysis","eye","immature eye","optic vesicle","retina"],"C":["epiphysis","eye","retina"]}},"egr2b":{"zfin":"ZDB-GENE-980526-283","name":"early growth response 2b (krox20)","dc":{"A":[["neural",13,0.69],["eye",17,0.14],["heart",11,0.17]],"B":[["pericytes",17,0.33],["neural",5,0.17]],"C":[]},"ish":{"A":["hindbrain","neural crest"],"B":["hindbrain"],"C":["hindbrain","lateral line system"]}},"fabp10a":{"zfin":"ZDB-GENE-020318-1","name":"fatty acid binding protein 10a, liver basic","dc":{"A":[],"B":[],"C":[["liver",29,0.18]]},"ish":{"A":[],"B":[],"C":["liver"]}},"gata1a":{"zfin":"ZDB-GENE-980526-268","name":"GATA binding protein 1a","dc":{"A":[["erythrocytes",59,1.0]],"B":[["erythrocytes",81,0.8]],"C":[["erythrocytes",56,0.31]]},"ish":{"A":["ventral mesoderm"],"B":["blood","intermediate cell mass of mesoderm"],"C":[]}},"her1":{"zfin":"ZDB-GENE-980526-125","name":"hairy-related 1","dc":{"A":[["blastomeres",86,0.98],["presomitic mesoderm",68,1.0],["paraxial mesoderm",60,0.75],["notochord",14,0.13],["somites",8,0.17]],"B":[["presomitic mesoderm",11,0.3],["somites",11,0.26]],"C":[]},"ish":{"A":["segmental plate","somite"],"B":["segmental plate","somite"],"C":[]}},"krt4":{"zfin":"ZDB-GENE-000607-83","name":"keratin 4","dc":{"A":[["periderm",100,0.97],["mucous-secreting",100,0.87],["ionocytes",100,0.74],["epidermis",97,0.73],["fin epithelia",100,0.66],["axial meso. (other)",100,0.57],["lateral line",100,0.51],["hatching gland",95,0.35],["olfactory",92,0.22],["xanthophores",78,0.17],["liver",56,0.22],["gut",67,0.18],["endoderm (other)",68,0.17],["notochord",67,0.17],["blastomeres",71,0.16],["slow muscle",72,0.15],["glia",70,0.15],["otic",75,0.13],["vasculature",69,0.14],["iridophores",71,0.13],["mesenchyme",67,0.13],["pronephros",67,0.13],["neural",65,0.13],["spinal cord",66,0.12],["presomitic mesoderm",63,0.12]],"B":[["periderm",100,0.99],["mucous-secreting",99,0.88],["epidermis",98,0.85],["fin epithelia",98,0.8],["ionocytes",100,0.77],["hatching gland",100,0.7],["lateral line",99,0.54],["olfactory",77,0.41],["paraxial mesoderm",100,0.29],["pericytes",100,0.27],["liver",68,0.32],["mural cells",80,0.26],["gut",76,0.25],["immune cells",77,0.22],["notochord",76,0.22],["slow muscle",75,0.22],["heart",71,0.23],["pronephros",71,0.23],["vasculature",62,0.26],["neural",65,0.24],["melanocytes",74,0.21],["PGCs",100,0.15],["otic",74,0.2],["muscle",69,0.21],["fin mesenchyme",62,0.21],["eye",72,0.18],["mesenchyme",67,0.19],["xanthophores",67,0.19],["glia",64,0.18],["fast muscle",93,0.12],["spinal cord",61,0.18],["endoderm (other)",68,0.16],["erythrocytes",82,0.13],["iridophores",59,0.18],["endocrine pancreas",48,0.17],["somites",67,0.12],["axial meso. (other)",50,0.12]],"C":[["periderm",100,1.0],["mucous-secreting",100,0.9],["epidermis",98,0.88],["fin epithelia",93,0.88],["ionocytes",91,0.73],["hatching gland",94,0.47],["lateral line",98,0.36],["gut",88,0.38],["olfactory",88,0.33],["endoderm (other)",100,0.29],["melanocytes",80,0.31],["xanthophores",77,0.32],["pericytes",85,0.26],["visceral smooth muscle",80,0.25],["spinal cord",80,0.23],["neural",74,0.24],["liver",68,0.26],["glia",75,0.23],["PGCs",100,0.17],["eye",77,0.22],["fin mesenchyme",75,0.22],["heart",80,0.2],["mesenchyme",80,0.2],["notochord",68,0.23],["muscle",79,0.19],["vasculature",71,0.21],["axial meso. (other)",80,0.17],["presomitic mesoderm",50,0.27],["immune cells",74,0.18],["mural cells",73,0.18],["slow muscle",77,0.17],["otic",71,0.17],["pronephros",67,0.18],["vascular smooth muscle",67,0.17],["erythrocytes",86,0.13],["paraxial mesoderm",33,0.33],["iridophores",58,0.18]]},"ish":{"A":["periderm"],"B":["epidermis","periderm"],"C":["epidermis"]}},"mpx":{"zfin":"ZDB-GENE-030131-9460","name":"myeloid-specific peroxidase","dc":{"A":[["immune cells",20,0.17]],"B":[["immune cells",24,0.84]],"C":[["immune cells",32,1.0]]},"ish":{"A":[],"B":["macrophage"],"C":["macrophage"]}},"pax2a":{"zfin":"ZDB-GENE-990415-8","name":"paired box 2a","dc":{"A":[["pronephros",79,0.93],["otic",72,0.93],["gut",43,0.72],["eye",30,0.26],["neural",11,0.15],["mesenchyme",5,0.13]],"B":[["pronephros",61,0.83],["otic",48,0.83],["eye",14,0.17],["gut",10,0.2],["neural",7,0.18],["spinal cord",6,0.18]],"C":[["pronephros",56,0.91],["otic",38,0.78],["spinal cord",14,0.66],["neural",13,0.67],["endoderm (other)",5,0.19]]},"ish":{"A":["immature eye","midbrain hindbrain boundary","neural tube","otic placode"],"B":["cloaca","hindbrain","mesoderm","midbrain hindbrain boundary","neural tube","neuron","optic stalk","otic vesicle","pharyngeal arch 3-7 skeleton","pronephric duct","spinal cord"],"C":["hindbrain","neuron","pronephric duct","spinal cord"]}},"tbxta":{"zfin":"ZDB-GENE-980526-437","name":"T-box transcription factor Ta (no tail a)","dc":{"A":[["notochord",94,0.94],["paraxial mesoderm",95,0.79],["axial meso. (other)",67,0.25],["presomitic mesoderm",27,0.15],["blastomeres",29,0.13]],"B":[["notochord",94,0.88],["fin mesenchyme",18,0.12]],"C":[["notochord",74,0.74]]},"ish":{"A":["notochord","tail bud"],"B":["notochord"],"C":[]}}}}</script>

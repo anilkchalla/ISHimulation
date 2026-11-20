@@ -1,50 +1,136 @@
-# Virtual ISH from single-cell data (prototype)
+# ISHimulation
 
-**Research and hypothesis generation only.** The maps are predictions from cluster-level scRNA-seq averages, not images of embryos.
+**Mapping zebrafish single-cell gene expression to embryonic anatomy**
 
-This interactive page paints [Daniocell](https://daniocell.nichd.nih.gov/) expression onto a cartoon zebrafish embryo ("approach 1"). It then scores each prediction against Thisse high-throughput whole-mount ISH annotations from [ZFIN](https://zfin.org/downloads).
+ISHimulation is an interactive web tool that turns single-cell RNA-seq data into simulated, ISH-style expression maps on a schematic zebrafish embryo. It then checks those maps against real whole-mount in situ hybridization (ISH) data.
 
-- **Genes (10):** cdh17, crx, egr2b, fabp10a, gata1a, her1, krt4, mpx, pax2a, tbxta
-- **Stages (3):**
+**[Open the live tool →](https://anilkchalla.github.io/ISHimulation/)** · [GitHub repository](https://github.com/anilkchalla/ISHimulation)
 
-| Stage | Daniocell scRNA-seq | Thisse ISH |
+> **For research and hypothesis generation only.** The maps are simulations built from cluster-level averages, not images of real embryos. Always confirm a pattern against the original ISH before you rely on it.
+
+![ISHimulation graphical abstract](ISHimulation_graphicalabstract.png)
+
+---
+
+## Abstract
+
+Single-cell RNA sequencing identifies which zebrafish cell populations express a gene, but tissue dissociation removes information about where those cells were located in the embryo. ISHimulation is a proposed research and teaching resource that includes an interactive web tool for projecting Daniocell cluster-level expression data onto predefined regions of a schematic zebrafish embryo. The tool visualizes two measures of expression for each region: the fraction of cells with detectable transcripts and relative mean expression.
+
+In a proof-of-concept evaluation, expression maps for 10 genes across segmentation, pharyngula, and hatching stages were compared with observed whole-mount in situ hybridization (ISH) patterns from the Thisse collection curated in ZFIN. Of 24 scored gene–stage pairs, 9 were concordant, 7 partially concordant, and 8 discordant. The mean Jaccard index was 0.49. The maps captured tissue-level patterns such as pronephric *cdh17* and notochordal *tbxta* expression. Discrepancies for *pax2a* and *egr2b* illustrated the difficulty of resolving discrete neural domains from broad tissue clusters. Limited transcript detection may have contributed to discrepancies for *crx* and early *egr2b*, while ambient RNA may have contributed to unexpected *krt4* signal.
+
+ISHimulation provides a way to compare single-cell expression summaries with observed embryonic expression patterns, identify discrepancies for follow-up, and demonstrate how cluster resolution and transcript detection shape the anatomical patterns that can be recovered.
+
+---
+
+## Who it's for
+
+| If you are… | ISHimulation helps you… |
+|---|---|
+| **A researcher** | Get a quick anatomical view of a gene before ordering probes, flag expression domains worth following up, and sanity-check scRNA-seq cluster annotations against ISH |
+| **An instructor** | Show students what single-cell data can and cannot reveal about where genes are expressed, using real data and a clear scoring system |
+| **A student** | Explore how the size of a cluster, detection sensitivity and background RNA change the picture you get from sequencing |
+
+## How to use the tool
+
+1. **Pick a gene** from the list at the top of the page.
+2. **Pick a stage:** Segmentation, Pharyngula or Hatching.
+3. **Choose a view:**
+   - **Predicted:** teal shading from Daniocell. Darker means a larger share of cells and higher expression.
+   - **Observed:** purple hatched outlines where Thisse ISH detected the gene.
+   - **Overlay:** both at once, so you can see where they agree and disagree.
+4. **Point at any region** of the embryo to see which Daniocell cell groups and which ISH annotations sit behind it.
+5. **Read the side panel** for the agreement score, the cell group-to-region table, and links to the gene's pages in Daniocell, ZFIN and Zebrahub gene2fish.
+6. **Scroll down** to see the full agreement grid for all genes and stages, a breakdown of why predictions miss, and recommended next steps.
+
+## Proof-of-concept results
+
+**Stages compared**
+
+| Stage | Daniocell (scRNA-seq) | Thisse ISH |
 |---|---|---|
 | Segmentation | 14–21 hpf | 14–19 somites |
 | Pharyngula | 24–34 hpf | 20–25 somites to Prim-25 |
 | Hatching | 48–58 hpf | High-pec to Long-pec |
 
-- **Score:** Jaccard overlap of cartoon regions. Concordant ≥ 0.67, Partial 0.25–0.66, Discordant < 0.25.
+**Agreement by gene** (✅ concordant · 🟨 partial · ❌ discordant · – no ISH annotation at that stage)
 
-## Files
+| Gene | Main tissue | Segmentation | Pharyngula | Hatching |
+|---|---|:-:|:-:|:-:|
+| *cdh17* | Pronephros | ✅ | ✅ | ✅ |
+| *gata1a* | Blood | ✅ | ✅ | – |
+| *mpx* | Myeloid cells | – | ✅ | ✅ |
+| *tbxta* | Notochord, tail bud | ✅ | ✅ | – |
+| *her1* | Presomitic mesoderm | 🟨 | ❌ | – |
+| *krt4* | Skin | 🟨 | 🟨 | 🟨 |
+| *pax2a* | Pronephros, otic, brain | ❌ | 🟨 | 🟨 |
+| *crx* | Eye, epiphysis | ❌ | ❌ | 🟨 |
+| *egr2b* | Hindbrain | ❌ | ❌ | ❌ |
+| *fabp10a* | Liver | – | – | ❌ |
+
+**What the results tell us**
+
+- **Single-tissue genes work well.** When a gene is confined to one tissue that Daniocell captures as its own cluster, the simulation matches the ISH.
+- **Fine brain domains get blurred.** Patterns like the midbrain–hindbrain boundary or individual rhombomeres are averaged into one large "neural" cluster. Mapping Daniocell's finer sub-clusters should recover much of this.
+- **Some genes are simply under-detected.** Low-abundance transcripts can be missed in dissociated cells. No mapping method can recover molecules that were never captured.
+- **Background RNA adds false signal.** *krt4* appears at low levels in almost every cluster.
+
+## How it works
+
+1. **Single-cell input.** For each gene, the fraction of cells expressing it and its relative mean expression are read from Daniocell's per-gene dot plots ([Sur et al., 2023](https://daniocell.nichd.nih.gov/)).
+2. **Anatomical projection.** Each Daniocell tissue cluster is assigned to a region of the schematic embryo. A region is "called" when at least 20% of its cells express the gene with at least 0.4 relative expression. Weaker signal is shown faintly but not scored.
+3. **ISH reference.** Observed patterns come from ZFIN's wild-type expression annotations for the Thisse high-throughput ISH screens. ZFIN anatomy terms are mapped to the same regions.
+4. **Scoring.** Agreement is the Jaccard index of predicted and observed regions: the regions both sources share, divided by all regions either one names. Scores are classed as Concordant (≥ 0.67), Partial (0.25–0.66) or Discordant (< 0.25).
+
+The full cluster-to-region and term-to-region tables are listed at the bottom of the tool page.
+
+## Limitations
+
+- The embryo is a **schematic**, not to scale, and one body plan is reused for all three stages.
+- Relative expression is **estimated from dot colour** on Daniocell's plots, not from raw counts.
+- "No ISH annotation" means the Thisse screen recorded nothing at that stage. That is **not proof the gene is absent.**
+- Known sources of error include ambient RNA, cell loss during dissociation, transcript dropout and incomplete ISH annotation.
+
+## Run it yourself
+
+The tool is a single self-contained HTML page with no server or external libraries.
+
+- **View locally:** download the repository and open `index.html` in any modern browser.
+- **Host your own copy on GitHub Pages:** go to Settings → Pages, choose *Deploy from a branch*, then select `main` and `/ (root)`.
+
+### Add genes or stages
 
 | File | Purpose |
 |---|---|
-| `index.html` | The site: one self-contained file with no external dependencies |
-| `data.json` | Daniocell values (% cells, relative mean) and ZFIN Thisse terms per gene × stage |
-| `logic.js` | Cluster→region and term→region maps, calling thresholds, scoring |
-| `template.html` | Page source before data and logic are inlined |
-| `build.py` | `python3 build.py` inlines `data.json` + `logic.js` into `index.html` |
-| `score.js` | `node score.js` prints the agreement matrix in the terminal |
+| `data.json` | Daniocell values and ZFIN ISH terms for each gene and stage |
+| `logic.js` | Region definitions, mapping tables, calling thresholds and scoring |
+| `template.html` | Page layout and interactivity |
+| `build.py` | Combines the three files above into `index.html` (`python3 build.py`) |
+| `score.js` | Prints the agreement grid in a terminal (`node score.js`) |
 
-## Deploy on GitHub Pages
+To add a gene, add its Daniocell values and ZFIN terms to `data.json`, map any new ZFIN terms in `logic.js`, and run `python3 build.py`.
 
-1. Create a repository and add these files. `index.html` must be at the repository root.
-2. Go to **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, then pick `main` and `/ (root)`.
-3. The site goes live at `https://<user>.github.io/<repo>/`.
+## Data sources
 
-## Add a gene or stage
+- **Daniocell:** Sur A, et al. (2023). Single-cell analysis of shared signatures and transcriptional diversity during zebrafish development. *Developmental Cell*. [daniocell.nichd.nih.gov](https://daniocell.nichd.nih.gov/)
+- **ZFIN:** Zebrafish Information Network, wild-type expression data (release 19 Nov 2026). [zfin.org/downloads](https://zfin.org/downloads)
+- **Thisse ISH collection:** Thisse B, Thisse C, et al. High-throughput expression analysis (2001–2008), via ZFIN. The images can also be browsed in [Zebrahub gene2fish](https://zebrahub.sf.czbiohub.org/gene2fish).
 
-1. Add an entry to `data.json`:
-   - `dc`: `[group, % cells, relative mean 0–1]` from the Daniocell dot plot (`gene/<L>/<gene>/<gene>_dotplot_all.svg`)
-   - `ish`: ZFIN anatomy terms from the Thisse publications (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22)
-2. Map any new ZFIN terms in `logic.js`.
-3. Run `python3 build.py`.
+All data belong to their original providers and remain under their own terms. Please cite them when using results from this tool.
 
-## Caveats
+## License
 
-- Relative mean expression is estimated from the dot colors on Daniocell's per-gene color scale.
-- "No ISH data" isn't proof of absence.
-- The single body plan is schematic and reused across stages.
-- Known biases: ambient RNA (e.g., *krt4*), dissociation loss, dropout, and incomplete ISH annotation.
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-Data © their providers (Daniocell: Sur et al. 2023, *Dev Cell*; ZFIN; Thisse et al.). Prototype by Anil K. Challa.
+ISHimulation is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). You may share and adapt it for **non-commercial** purposes, as long as you **give credit** and release any adaptations under the **same license**. See [`LICENSE`](LICENSE) for details.
+
+This license covers the tool's code, text and graphics. It does not cover the Daniocell, ZFIN or Thisse data, which remain under their providers' terms.
+
+## How to cite
+
+> Challa AK. *ISHimulation: Mapping zebrafish single-cell gene expression to embryonic anatomy.* 2026. https://github.com/anilkchalla/ISHimulation
+
+## Author
+
+**Anil K. Challa, Ph.D.** · [anilkchalla.github.io](https://anilkchalla.github.io) · akchalla@uab.edu
+
+Feedback, suggested genes and collaboration ideas are welcome.
