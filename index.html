@@ -76,6 +76,36 @@
   <div class="banner"><b>Research and hypothesis generation only.</b> The purple maps are <i>predictions</i> from cluster-level scRNA-seq averages, not images of real embryos. Check every pattern against the original ISH before you use it.</div>
 </header>
 
+  <!-- ISHimulation abstract box: insert directly after </header> -->
+<style>
+  .abs-wrap{max-width:1240px;margin:18px auto 0;padding:0 32px}
+  .abs-box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:center;
+    background:#fff;border:1px solid #e2dacb;border-radius:16px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .abs-box figure{margin:0}
+  .abs-box img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid #eee}
+  .abs-box figcaption{font-size:12.5px;color:#6b655b;margin-top:6px}
+  .abs-box h2{font-size:19px;line-height:1.3;margin:0 0 10px}
+  .abs-box p{margin:0 0 10px;font-size:14.5px;line-height:1.55}
+  .abs-box p:last-child{margin-bottom:0}
+  @media (max-width:900px){.abs-box{grid-template-columns:1fr}.abs-wrap{padding:0 16px}}
+</style>
+<div class="abs-wrap">
+  <section class="abs-box" aria-labelledby="abs-h">
+    <figure>
+      <img src="ISHimulation_graphicalabstract.png"
+           alt="Graphical abstract: Daniocell scRNA-seq clusters are projected onto a schematic zebrafish embryo and compared with whole-mount ISH. 10 genes, 3 stages, 24 scored gene-stage pairs: 9 concordant, 7 partially concordant, 8 discordant, mean Jaccard index 0.49.">
+      <figcaption>Graphical abstract. Embryo maps are illustrative.</figcaption>
+    </figure>
+    <div>
+      <h2 id="abs-h">ISHimulation: Mapping Zebrafish Single-Cell Gene Expression to Embryonic Anatomy</h2>
+      <p>Single-cell RNA sequencing identifies which zebrafish cell populations express a gene, but tissue dissociation removes information about where those cells were located in the embryo. ISHimulation is a proposed research and teaching resource that includes an interactive web tool for projecting Daniocell cluster-level expression data onto predefined regions of a schematic zebrafish embryo. The tool visualizes two measures of expression for each region: the fraction of cells with detectable transcripts and relative mean expression.</p>
+      <p>In a proof-of-concept evaluation, expression maps for 10 genes across segmentation, pharyngula, and hatching stages were compared with observed whole-mount in situ hybridization (ISH) patterns from the Thisse collection curated in ZFIN. Of 24 scored gene–stage pairs, 9 were concordant, 7 partially concordant, and 8 discordant. The mean Jaccard index was 0.49. The maps captured tissue-level patterns such as pronephric <i>cdh17</i> and notochordal <i>tbxta</i> expression. Discrepancies for <i>pax2a</i> and <i>egr2b</i> illustrated the difficulty of resolving discrete neural domains from broad tissue clusters. Limited transcript detection may have contributed to discrepancies for <i>crx</i> and early <i>egr2b</i>, while ambient RNA may have contributed to unexpected <i>krt4</i> signal.</p>
+      <p>ISHimulation provides a way to compare single-cell expression summaries with observed embryonic expression patterns, identify discrepancies for follow-up, and demonstrate how cluster resolution and transcript detection shape the anatomical patterns that can be recovered.</p>
+    </div>
+  </section>
+</div>
+<!-- end abstract box -->
+  
 <main>
 <section aria-labelledby="explorer-h">
   <h2 id="explorer-h">1. Explore a gene</h2>
