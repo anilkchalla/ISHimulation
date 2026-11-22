@@ -1,57 +1,1260 @@
 {
-  "meta": {
-    "daniocell_source": "Daniocell (Sur et al. 2023), per-gene 'all cells' dot plots (gene/<L>/<gene>/<gene>_dotplot_all.svg), parsed 2026-11-20. p = % cells expressing; e = mean expression scaled 0-1 to the gene's own Daniocell color bar (approximate, read from dot color).",
-    "zfin_source": "ZFIN wildtype-expression_fish.txt (release 2026-11-19), rows from Thisse et al. 2001/2004/2005/2008 high-throughput ISH (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22).",
-    "stages": {
-      "A": {"label": "Segmentation", "daniocell": "14-21 hpf", "thisse": "14-19 somites"},
-      "B": {"label": "Pharyngula", "daniocell": "24-34 hpf", "thisse": "20-25 somites to Prim-25"},
-      "C": {"label": "Hatching", "daniocell": "48-58 hpf", "thisse": "High-pec to Long-pec"}
-    }
+ "meta": {
+  "daniocell_source": "Daniocell (Sur et al. 2023), per-gene 'all cells' dot plots (gene/<L>/<gene>/<gene>_dotplot_all.svg), parsed 2026-11-20. p = % cells expressing; e = mean expression scaled 0-1 to the gene's own Daniocell color bar (approximate, read from dot color).",
+  "zfin_source": "ZFIN wildtype-expression_fish.txt (release 2026-11-19), rows from Thisse et al. 2001/2004/2005/2008 high-throughput ISH (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22).",
+  "stages": {
+   "A": {
+    "label": "Segmentation",
+    "daniocell": "14-21 hpf",
+    "thisse": "14-19 somites"
+   },
+   "B": {
+    "label": "Pharyngula",
+    "daniocell": "24-34 hpf",
+    "thisse": "20-25 somites to Prim-25"
+   },
+   "C": {
+    "label": "Hatching",
+    "daniocell": "48-58 hpf",
+    "thisse": "High-pec to Long-pec"
+   }
   },
-  "genes": {
-    "cdh17": {"zfin": "ZDB-GENE-030910-3", "name": "cadherin 17",
-      "dc": {"A": [["pronephros",88,0.81]],
-             "B": [["pronephros",87,1.0],["liver",8,0.13]],
-             "C": [["pronephros",84,0.98],["gut",32,0.13]]},
-      "ish": {"A": ["pronephric duct"], "B": ["pronephric duct"], "C": ["pronephric duct"]}},
-    "crx": {"zfin": "ZDB-GENE-010403-1", "name": "cone-rod homeobox",
-      "dc": {"A": [], "B": [], "C": [["eye",30,0.76]]},
-      "ish": {"A": ["epiphysis"], "B": ["epiphysis","eye","immature eye","optic vesicle","retina"], "C": ["epiphysis","eye","retina"]}},
-    "egr2b": {"zfin": "ZDB-GENE-980526-283", "name": "early growth response 2b (krox20)",
-      "dc": {"A": [["neural",13,0.69],["eye",17,0.14],["heart",11,0.17]],
-             "B": [["pericytes",17,0.33],["neural",5,0.17]],
-             "C": []},
-      "ish": {"A": ["hindbrain","neural crest"], "B": ["hindbrain"], "C": ["hindbrain","lateral line system"]}},
-    "fabp10a": {"zfin": "ZDB-GENE-020318-1", "name": "fatty acid binding protein 10a, liver basic",
-      "dc": {"A": [], "B": [], "C": [["liver",29,0.18]]},
-      "ish": {"A": [], "B": [], "C": ["liver"]}},
-    "gata1a": {"zfin": "ZDB-GENE-980526-268", "name": "GATA binding protein 1a",
-      "dc": {"A": [["erythrocytes",59,1.0]], "B": [["erythrocytes",81,0.8]], "C": [["erythrocytes",56,0.31]]},
-      "ish": {"A": ["ventral mesoderm"], "B": ["blood","intermediate cell mass of mesoderm"], "C": []}},
-    "her1": {"zfin": "ZDB-GENE-980526-125", "name": "hairy-related 1",
-      "dc": {"A": [["blastomeres",86,0.98],["presomitic mesoderm",68,1.0],["paraxial mesoderm",60,0.75],["notochord",14,0.13],["somites",8,0.17]],
-             "B": [["presomitic mesoderm",11,0.3],["somites",11,0.26]],
-             "C": []},
-      "ish": {"A": ["segmental plate","somite"], "B": ["segmental plate","somite"], "C": []}},
-    "krt4": {"zfin": "ZDB-GENE-000607-83", "name": "keratin 4",
-      "dc": {"A": [["periderm",100,0.97],["mucous-secreting",100,0.87],["ionocytes",100,0.74],["epidermis",97,0.73],["fin epithelia",100,0.66],["axial meso. (other)",100,0.57],["lateral line",100,0.51],["hatching gland",95,0.35],["olfactory",92,0.22],["xanthophores",78,0.17],["liver",56,0.22],["gut",67,0.18],["endoderm (other)",68,0.17],["notochord",67,0.17],["blastomeres",71,0.16],["slow muscle",72,0.15],["glia",70,0.15],["otic",75,0.13],["vasculature",69,0.14],["iridophores",71,0.13],["mesenchyme",67,0.13],["pronephros",67,0.13],["neural",65,0.13],["spinal cord",66,0.12],["presomitic mesoderm",63,0.12]],
-             "B": [["periderm",100,0.99],["mucous-secreting",99,0.88],["epidermis",98,0.85],["fin epithelia",98,0.8],["ionocytes",100,0.77],["hatching gland",100,0.7],["lateral line",99,0.54],["olfactory",77,0.41],["paraxial mesoderm",100,0.29],["pericytes",100,0.27],["liver",68,0.32],["mural cells",80,0.26],["gut",76,0.25],["immune cells",77,0.22],["notochord",76,0.22],["slow muscle",75,0.22],["heart",71,0.23],["pronephros",71,0.23],["vasculature",62,0.26],["neural",65,0.24],["melanocytes",74,0.21],["PGCs",100,0.15],["otic",74,0.2],["muscle",69,0.21],["fin mesenchyme",62,0.21],["eye",72,0.18],["mesenchyme",67,0.19],["xanthophores",67,0.19],["glia",64,0.18],["fast muscle",93,0.12],["spinal cord",61,0.18],["endoderm (other)",68,0.16],["erythrocytes",82,0.13],["iridophores",59,0.18],["endocrine pancreas",48,0.17],["somites",67,0.12],["axial meso. (other)",50,0.12]],
-             "C": [["periderm",100,1.0],["mucous-secreting",100,0.9],["epidermis",98,0.88],["fin epithelia",93,0.88],["ionocytes",91,0.73],["hatching gland",94,0.47],["lateral line",98,0.36],["gut",88,0.38],["olfactory",88,0.33],["endoderm (other)",100,0.29],["melanocytes",80,0.31],["xanthophores",77,0.32],["pericytes",85,0.26],["visceral smooth muscle",80,0.25],["spinal cord",80,0.23],["neural",74,0.24],["liver",68,0.26],["glia",75,0.23],["PGCs",100,0.17],["eye",77,0.22],["fin mesenchyme",75,0.22],["heart",80,0.2],["mesenchyme",80,0.2],["notochord",68,0.23],["muscle",79,0.19],["vasculature",71,0.21],["axial meso. (other)",80,0.17],["presomitic mesoderm",50,0.27],["immune cells",74,0.18],["mural cells",73,0.18],["slow muscle",77,0.17],["otic",71,0.17],["pronephros",67,0.18],["vascular smooth muscle",67,0.17],["erythrocytes",86,0.13],["paraxial mesoderm",33,0.33],["iridophores",58,0.18]]},
-      "ish": {"A": ["periderm"], "B": ["epidermis","periderm"], "C": ["epidermis"]}},
-    "mpx": {"zfin": "ZDB-GENE-030131-9460", "name": "myeloid-specific peroxidase",
-      "dc": {"A": [["immune cells",20,0.17]], "B": [["immune cells",24,0.84]], "C": [["immune cells",32,1.0]]},
-      "ish": {"A": [], "B": ["macrophage"], "C": ["macrophage"]}},
-    "pax2a": {"zfin": "ZDB-GENE-990415-8", "name": "paired box 2a",
-      "dc": {"A": [["pronephros",79,0.93],["otic",72,0.93],["gut",43,0.72],["eye",30,0.26],["neural",11,0.15],["mesenchyme",5,0.13]],
-             "B": [["pronephros",61,0.83],["otic",48,0.83],["eye",14,0.17],["gut",10,0.2],["neural",7,0.18],["spinal cord",6,0.18]],
-             "C": [["pronephros",56,0.91],["otic",38,0.78],["spinal cord",14,0.66],["neural",13,0.67],["endoderm (other)",5,0.19]]},
-      "ish": {"A": ["immature eye","midbrain hindbrain boundary","neural tube","otic placode"],
-              "B": ["cloaca","hindbrain","mesoderm","midbrain hindbrain boundary","neural tube","neuron","optic stalk","otic vesicle","pharyngeal arch 3-7 skeleton","pronephric duct","spinal cord"],
-              "C": ["hindbrain","neuron","pronephric duct","spinal cord"]}},
-    "tbxta": {"zfin": "ZDB-GENE-980526-437", "name": "T-box transcription factor Ta (no tail a)",
-      "dc": {"A": [["notochord",94,0.94],["paraxial mesoderm",95,0.79],["axial meso. (other)",67,0.25],["presomitic mesoderm",27,0.15],["blastomeres",29,0.13]],
-             "B": [["notochord",94,0.88],["fin mesenchyme",18,0.12]],
-             "C": [["notochord",74,0.74]]},
-      "ish": {"A": ["notochord","tail bud"], "B": ["notochord"], "C": []}}
+  "zfin_figs_source": "ZFIN xpat_fish.txt, xpatfig_fish.txt, xpat_stage_anatomy.txt, ImageFigures.txt (release 2026-11-21); Thisse figures with at least one image."
+ },
+ "genes": {
+  "cdh17": {
+   "zfin": "ZDB-GENE-030910-3",
+   "name": "cadherin 17",
+   "dc": {
+    "A": [
+     [
+      "pronephros",
+      88,
+      0.81
+     ]
+    ],
+    "B": [
+     [
+      "pronephros",
+      87,
+      1.0
+     ],
+     [
+      "liver",
+      8,
+      0.13
+     ]
+    ],
+    "C": [
+     [
+      "pronephros",
+      84,
+      0.98
+     ],
+     [
+      "gut",
+      32,
+      0.13
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "pronephric duct"
+    ],
+    "B": [
+     "pronephric duct"
+    ],
+    "C": [
+     "pronephric duct"
+    ]
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-050630-9854",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-050630-1895",
+      "20-25 somites to Prim-5",
+      1
+     ],
+     [
+      "ZDB-FIG-050630-10214",
+      "Prim-15 to Prim-25",
+      1
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-050630-3271",
+      "High-pec to Long-pec",
+      1
+     ]
+    ]
+   },
+   "note": "The clearest case. At every stage, cdh17 is detected in 84–88% of pronephros cells, at the top of its expression range, and almost nowhere else: liver (8% of cells, 24–34 hpf) and gut (32%, 48–58 hpf) carry only trace signal below the calling threshold. Thisse ISH shows the pronephric duct at all three stages."
+  },
+  "crx": {
+   "zfin": "ZDB-GENE-010403-1",
+   "name": "cone-rod homeobox",
+   "dc": {
+    "A": [],
+    "B": [],
+    "C": [
+     [
+      "eye",
+      30,
+      0.76
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "epiphysis"
+    ],
+    "B": [
+     "epiphysis",
+     "eye",
+     "immature eye",
+     "optic vesicle",
+     "retina"
+    ],
+    "C": [
+     "epiphysis",
+     "eye",
+     "retina"
+    ]
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-051103-82",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-051103-113",
+      "20-25 somites to Prim-5",
+      2
+     ],
+     [
+      "ZDB-FIG-051103-5",
+      "20-25 somites to Prim-5",
+      2
+     ],
+     [
+      "ZDB-FIG-051103-285",
+      "Prim-15 to Prim-25",
+      3
+     ],
+     [
+      "ZDB-FIG-051103-28",
+      "Prim-15 to Prim-25",
+      2
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-051103-205",
+      "High-pec to Long-pec",
+      3
+     ],
+     [
+      "ZDB-FIG-051103-55",
+      "High-pec to Long-pec",
+      1
+     ]
+    ]
+   }
+  },
+  "egr2b": {
+   "zfin": "ZDB-GENE-980526-283",
+   "name": "early growth response 2b (krox20)",
+   "dc": {
+    "A": [
+     [
+      "neural",
+      13,
+      0.69
+     ],
+     [
+      "eye",
+      17,
+      0.14
+     ],
+     [
+      "heart",
+      11,
+      0.17
+     ]
+    ],
+    "B": [
+     [
+      "pericytes",
+      17,
+      0.33
+     ],
+     [
+      "neural",
+      5,
+      0.17
+     ]
+    ],
+    "C": []
+   },
+   "ish": {
+    "A": [
+     "hindbrain",
+     "neural crest"
+    ],
+    "B": [
+     "hindbrain"
+    ],
+    "C": [
+     "hindbrain",
+     "lateral line system"
+    ]
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-050630-9326",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-050630-7072",
+      "20-25 somites to Prim-5",
+      3
+     ],
+     [
+      "ZDB-FIG-050630-6099",
+      "Prim-15 to Prim-25",
+      3
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-050630-1976",
+      "High-pec to Long-pec",
+      5
+     ]
+    ]
+   }
+  },
+  "fabp10a": {
+   "zfin": "ZDB-GENE-020318-1",
+   "name": "fatty acid binding protein 10a, liver basic",
+   "dc": {
+    "A": [],
+    "B": [],
+    "C": [
+     [
+      "liver",
+      29,
+      0.18
+     ]
+    ]
+   },
+   "ish": {
+    "A": [],
+    "B": [],
+    "C": [
+     "liver"
+    ]
+   },
+   "figs": {
+    "A": [],
+    "B": [],
+    "C": [
+     [
+      "ZDB-FIG-070108-254",
+      "High-pec to Long-pec",
+      2
+     ]
+    ]
+   }
+  },
+  "gata1a": {
+   "zfin": "ZDB-GENE-980526-268",
+   "name": "GATA binding protein 1a",
+   "dc": {
+    "A": [
+     [
+      "erythrocytes",
+      59,
+      1.0
+     ]
+    ],
+    "B": [
+     [
+      "erythrocytes",
+      81,
+      0.8
+     ]
+    ],
+    "C": [
+     [
+      "erythrocytes",
+      56,
+      0.31
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "ventral mesoderm"
+    ],
+    "B": [
+     "blood",
+     "intermediate cell mass of mesoderm"
+    ],
+    "C": []
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-060130-310",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-060130-311",
+      "20-25 somites to Prim-5",
+      4
+     ],
+     [
+      "ZDB-FIG-060130-148",
+      "Prim-15 to Prim-25",
+      2
+     ]
+    ],
+    "C": []
+   },
+   "note": "Erythrocytes are the only Daniocell group expressing gata1a (59% → 81% → 56% of cells). At 14–19 somites, Thisse annotates the ventral mesoderm, where the blood precursors that Daniocell already groups as erythrocytes arise; by pharyngula it marks the intermediate cell mass and circulating blood. At hatching, Daniocell still detects gata1a in 56% of erythrocytes at lower relative expression, but Thisse recorded no images, so that stage isn't scored."
+  },
+  "her1": {
+   "zfin": "ZDB-GENE-980526-125",
+   "name": "hairy-related 1",
+   "dc": {
+    "A": [
+     [
+      "blastomeres",
+      86,
+      0.98
+     ],
+     [
+      "presomitic mesoderm",
+      68,
+      1.0
+     ],
+     [
+      "paraxial mesoderm",
+      60,
+      0.75
+     ],
+     [
+      "notochord",
+      14,
+      0.13
+     ],
+     [
+      "somites",
+      8,
+      0.17
+     ]
+    ],
+    "B": [
+     [
+      "presomitic mesoderm",
+      11,
+      0.3
+     ],
+     [
+      "somites",
+      11,
+      0.26
+     ]
+    ],
+    "C": []
+   },
+   "ish": {
+    "A": [
+     "segmental plate",
+     "somite"
+    ],
+    "B": [
+     "segmental plate",
+     "somite"
+    ],
+    "C": []
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-051103-200",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-051103-224",
+      "20-25 somites to Prim-5",
+      2
+     ]
+    ],
+    "C": []
+   }
+  },
+  "krt4": {
+   "zfin": "ZDB-GENE-000607-83",
+   "name": "keratin 4",
+   "dc": {
+    "A": [
+     [
+      "periderm",
+      100,
+      0.97
+     ],
+     [
+      "mucous-secreting",
+      100,
+      0.87
+     ],
+     [
+      "ionocytes",
+      100,
+      0.74
+     ],
+     [
+      "epidermis",
+      97,
+      0.73
+     ],
+     [
+      "fin epithelia",
+      100,
+      0.66
+     ],
+     [
+      "axial meso. (other)",
+      100,
+      0.57
+     ],
+     [
+      "lateral line",
+      100,
+      0.51
+     ],
+     [
+      "hatching gland",
+      95,
+      0.35
+     ],
+     [
+      "olfactory",
+      92,
+      0.22
+     ],
+     [
+      "xanthophores",
+      78,
+      0.17
+     ],
+     [
+      "liver",
+      56,
+      0.22
+     ],
+     [
+      "gut",
+      67,
+      0.18
+     ],
+     [
+      "endoderm (other)",
+      68,
+      0.17
+     ],
+     [
+      "notochord",
+      67,
+      0.17
+     ],
+     [
+      "blastomeres",
+      71,
+      0.16
+     ],
+     [
+      "slow muscle",
+      72,
+      0.15
+     ],
+     [
+      "glia",
+      70,
+      0.15
+     ],
+     [
+      "otic",
+      75,
+      0.13
+     ],
+     [
+      "vasculature",
+      69,
+      0.14
+     ],
+     [
+      "iridophores",
+      71,
+      0.13
+     ],
+     [
+      "mesenchyme",
+      67,
+      0.13
+     ],
+     [
+      "pronephros",
+      67,
+      0.13
+     ],
+     [
+      "neural",
+      65,
+      0.13
+     ],
+     [
+      "spinal cord",
+      66,
+      0.12
+     ],
+     [
+      "presomitic mesoderm",
+      63,
+      0.12
+     ]
+    ],
+    "B": [
+     [
+      "periderm",
+      100,
+      0.99
+     ],
+     [
+      "mucous-secreting",
+      99,
+      0.88
+     ],
+     [
+      "epidermis",
+      98,
+      0.85
+     ],
+     [
+      "fin epithelia",
+      98,
+      0.8
+     ],
+     [
+      "ionocytes",
+      100,
+      0.77
+     ],
+     [
+      "hatching gland",
+      100,
+      0.7
+     ],
+     [
+      "lateral line",
+      99,
+      0.54
+     ],
+     [
+      "olfactory",
+      77,
+      0.41
+     ],
+     [
+      "paraxial mesoderm",
+      100,
+      0.29
+     ],
+     [
+      "pericytes",
+      100,
+      0.27
+     ],
+     [
+      "liver",
+      68,
+      0.32
+     ],
+     [
+      "mural cells",
+      80,
+      0.26
+     ],
+     [
+      "gut",
+      76,
+      0.25
+     ],
+     [
+      "immune cells",
+      77,
+      0.22
+     ],
+     [
+      "notochord",
+      76,
+      0.22
+     ],
+     [
+      "slow muscle",
+      75,
+      0.22
+     ],
+     [
+      "heart",
+      71,
+      0.23
+     ],
+     [
+      "pronephros",
+      71,
+      0.23
+     ],
+     [
+      "vasculature",
+      62,
+      0.26
+     ],
+     [
+      "neural",
+      65,
+      0.24
+     ],
+     [
+      "melanocytes",
+      74,
+      0.21
+     ],
+     [
+      "PGCs",
+      100,
+      0.15
+     ],
+     [
+      "otic",
+      74,
+      0.2
+     ],
+     [
+      "muscle",
+      69,
+      0.21
+     ],
+     [
+      "fin mesenchyme",
+      62,
+      0.21
+     ],
+     [
+      "eye",
+      72,
+      0.18
+     ],
+     [
+      "mesenchyme",
+      67,
+      0.19
+     ],
+     [
+      "xanthophores",
+      67,
+      0.19
+     ],
+     [
+      "glia",
+      64,
+      0.18
+     ],
+     [
+      "fast muscle",
+      93,
+      0.12
+     ],
+     [
+      "spinal cord",
+      61,
+      0.18
+     ],
+     [
+      "endoderm (other)",
+      68,
+      0.16
+     ],
+     [
+      "erythrocytes",
+      82,
+      0.13
+     ],
+     [
+      "iridophores",
+      59,
+      0.18
+     ],
+     [
+      "endocrine pancreas",
+      48,
+      0.17
+     ],
+     [
+      "somites",
+      67,
+      0.12
+     ],
+     [
+      "axial meso. (other)",
+      50,
+      0.12
+     ]
+    ],
+    "C": [
+     [
+      "periderm",
+      100,
+      1.0
+     ],
+     [
+      "mucous-secreting",
+      100,
+      0.9
+     ],
+     [
+      "epidermis",
+      98,
+      0.88
+     ],
+     [
+      "fin epithelia",
+      93,
+      0.88
+     ],
+     [
+      "ionocytes",
+      91,
+      0.73
+     ],
+     [
+      "hatching gland",
+      94,
+      0.47
+     ],
+     [
+      "lateral line",
+      98,
+      0.36
+     ],
+     [
+      "gut",
+      88,
+      0.38
+     ],
+     [
+      "olfactory",
+      88,
+      0.33
+     ],
+     [
+      "endoderm (other)",
+      100,
+      0.29
+     ],
+     [
+      "melanocytes",
+      80,
+      0.31
+     ],
+     [
+      "xanthophores",
+      77,
+      0.32
+     ],
+     [
+      "pericytes",
+      85,
+      0.26
+     ],
+     [
+      "visceral smooth muscle",
+      80,
+      0.25
+     ],
+     [
+      "spinal cord",
+      80,
+      0.23
+     ],
+     [
+      "neural",
+      74,
+      0.24
+     ],
+     [
+      "liver",
+      68,
+      0.26
+     ],
+     [
+      "glia",
+      75,
+      0.23
+     ],
+     [
+      "PGCs",
+      100,
+      0.17
+     ],
+     [
+      "eye",
+      77,
+      0.22
+     ],
+     [
+      "fin mesenchyme",
+      75,
+      0.22
+     ],
+     [
+      "heart",
+      80,
+      0.2
+     ],
+     [
+      "mesenchyme",
+      80,
+      0.2
+     ],
+     [
+      "notochord",
+      68,
+      0.23
+     ],
+     [
+      "muscle",
+      79,
+      0.19
+     ],
+     [
+      "vasculature",
+      71,
+      0.21
+     ],
+     [
+      "axial meso. (other)",
+      80,
+      0.17
+     ],
+     [
+      "presomitic mesoderm",
+      50,
+      0.27
+     ],
+     [
+      "immune cells",
+      74,
+      0.18
+     ],
+     [
+      "mural cells",
+      73,
+      0.18
+     ],
+     [
+      "slow muscle",
+      77,
+      0.17
+     ],
+     [
+      "otic",
+      71,
+      0.17
+     ],
+     [
+      "pronephros",
+      67,
+      0.18
+     ],
+     [
+      "vascular smooth muscle",
+      67,
+      0.17
+     ],
+     [
+      "erythrocytes",
+      86,
+      0.13
+     ],
+     [
+      "paraxial mesoderm",
+      33,
+      0.33
+     ],
+     [
+      "iridophores",
+      58,
+      0.18
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "periderm"
+    ],
+    "B": [
+     "epidermis",
+     "periderm"
+    ],
+    "C": [
+     "epidermis"
+    ]
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-050630-3761",
+      "14-19 somites",
+      1
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-050630-13930",
+      "20-25 somites to Prim-5",
+      3
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-050630-13011",
+      "High-pec to Long-pec",
+      1
+     ]
+    ]
+   }
+  },
+  "mpx": {
+   "zfin": "ZDB-GENE-030131-9460",
+   "name": "myeloid-specific peroxidase",
+   "dc": {
+    "A": [
+     [
+      "immune cells",
+      20,
+      0.17
+     ]
+    ],
+    "B": [
+     [
+      "immune cells",
+      24,
+      0.84
+     ]
+    ],
+    "C": [
+     [
+      "immune cells",
+      32,
+      1.0
+     ]
+    ]
+   },
+   "ish": {
+    "A": [],
+    "B": [
+     "macrophage"
+    ],
+    "C": [
+     "macrophage"
+    ]
+   },
+   "figs": {
+    "A": [],
+    "B": [
+     [
+      "ZDB-FIG-050630-6642",
+      "20-25 somites to Prim-5",
+      1
+     ],
+     [
+      "ZDB-FIG-050630-14026",
+      "Prim-15 to Prim-25",
+      1
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-050630-7110",
+      "High-pec to Long-pec",
+      1
+     ]
+    ]
+   },
+   "note": "Daniocell detects mpx only in the immune-cell group, at high relative expression (0.84 at 24–34 hpf, 1.0 at 48–58 hpf). Only about a quarter to a third of immune cells express it (24% → 32%), consistent with mpx marking one myeloid subtype (neutrophils) within a mixed immune group. ZFIN files the 2001 Thisse images under the term 'macrophage'. At 14–21 hpf the signal is weak (20% of cells, 0.17) and Thisse has no annotation, so that stage isn't scored."
+  },
+  "pax2a": {
+   "zfin": "ZDB-GENE-990415-8",
+   "name": "paired box 2a",
+   "dc": {
+    "A": [
+     [
+      "pronephros",
+      79,
+      0.93
+     ],
+     [
+      "otic",
+      72,
+      0.93
+     ],
+     [
+      "gut",
+      43,
+      0.72
+     ],
+     [
+      "eye",
+      30,
+      0.26
+     ],
+     [
+      "neural",
+      11,
+      0.15
+     ],
+     [
+      "mesenchyme",
+      5,
+      0.13
+     ]
+    ],
+    "B": [
+     [
+      "pronephros",
+      61,
+      0.83
+     ],
+     [
+      "otic",
+      48,
+      0.83
+     ],
+     [
+      "eye",
+      14,
+      0.17
+     ],
+     [
+      "gut",
+      10,
+      0.2
+     ],
+     [
+      "neural",
+      7,
+      0.18
+     ],
+     [
+      "spinal cord",
+      6,
+      0.18
+     ]
+    ],
+    "C": [
+     [
+      "pronephros",
+      56,
+      0.91
+     ],
+     [
+      "otic",
+      38,
+      0.78
+     ],
+     [
+      "spinal cord",
+      14,
+      0.66
+     ],
+     [
+      "neural",
+      13,
+      0.67
+     ],
+     [
+      "endoderm (other)",
+      5,
+      0.19
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "immature eye",
+     "midbrain hindbrain boundary",
+     "neural tube",
+     "otic placode"
+    ],
+    "B": [
+     "cloaca",
+     "hindbrain",
+     "mesoderm",
+     "midbrain hindbrain boundary",
+     "neural tube",
+     "neuron",
+     "optic stalk",
+     "otic vesicle",
+     "pharyngeal arch 3-7 skeleton",
+     "pronephric duct",
+     "spinal cord"
+    ],
+    "C": [
+     "hindbrain",
+     "neuron",
+     "pronephric duct",
+     "spinal cord"
+    ]
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-050630-4769",
+      "14-19 somites",
+      5
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-050630-6072",
+      "20-25 somites to Prim-5",
+      16
+     ],
+     [
+      "ZDB-FIG-050630-326",
+      "Prim-15 to Prim-25",
+      6
+     ]
+    ],
+    "C": [
+     [
+      "ZDB-FIG-050630-11086",
+      "High-pec to Long-pec",
+      15
+     ]
+    ]
+   }
+  },
+  "tbxta": {
+   "zfin": "ZDB-GENE-980526-437",
+   "name": "T-box transcription factor Ta (no tail a)",
+   "dc": {
+    "A": [
+     [
+      "notochord",
+      94,
+      0.94
+     ],
+     [
+      "paraxial mesoderm",
+      95,
+      0.79
+     ],
+     [
+      "axial meso. (other)",
+      67,
+      0.25
+     ],
+     [
+      "presomitic mesoderm",
+      27,
+      0.15
+     ],
+     [
+      "blastomeres",
+      29,
+      0.13
+     ]
+    ],
+    "B": [
+     [
+      "notochord",
+      94,
+      0.88
+     ],
+     [
+      "fin mesenchyme",
+      18,
+      0.12
+     ]
+    ],
+    "C": [
+     [
+      "notochord",
+      74,
+      0.74
+     ]
+    ]
+   },
+   "ish": {
+    "A": [
+     "notochord",
+     "tail bud"
+    ],
+    "B": [
+     "notochord"
+    ],
+    "C": []
+   },
+   "figs": {
+    "A": [
+     [
+      "ZDB-FIG-050630-6935",
+      "14-19 somites",
+      2
+     ]
+    ],
+    "B": [
+     [
+      "ZDB-FIG-050630-14844",
+      "20-25 somites to Prim-5",
+      3
+     ],
+     [
+      "ZDB-FIG-050630-131",
+      "Prim-15 to Prim-25",
+      1
+     ]
+    ],
+    "C": []
+   },
+   "note": "Notochord dominates at every stage (94%, 94%, 74% of cells). At 14–21 hpf, Daniocell also shows strong expression in paraxial mesoderm (95% of cells), which maps to the tail bud and matches the Thisse tail-bud annotation. At hatching, Daniocell still detects tbxta in 74% of notochord cells, but the Thisse record has no image, so that stage isn't scored. That makes it a testable prediction."
   }
+ }
 }

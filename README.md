@@ -67,6 +67,31 @@ ISHimulation provides a way to compare single-cell expression summaries with obs
 | *egr2b* | Hindbrain | ❌ | ❌ | ❌ |
 | *fabp10a* | Liver | – | – | ❌ |
 
+### Where the simulation agrees with ISH
+
+The 9 concordant gene–stage pairs come from four genes with expression confined to a single, well-resolved tissue. Daniocell values are shown as *% of cells expressing · relative mean expression*. ZFIN figure links open the original Thisse ISH images; these are copyrighted by their authors and displayed by ZFIN with permission, so they are linked rather than reproduced here.
+
+| Gene | Stage | Daniocell (scRNA-seq) | Thisse ISH (ZFIN term) | ISH figures |
+|---|---|---|---|---|
+| *cdh17* | Segmentation (14-21 hpf) | pronephros 88% · 0.81 | pronephric duct | [14-19 somites](https://zfin.org/ZDB-FIG-050630-9854) |
+|  | Pharyngula (24-34 hpf) | pronephros 87% · 1.00 | pronephric duct | [20-25 somites to Prim-5](https://zfin.org/ZDB-FIG-050630-1895) · [Prim-15 to Prim-25](https://zfin.org/ZDB-FIG-050630-10214) |
+|  | Hatching (48-58 hpf) | pronephros 84% · 0.98 | pronephric duct | [High-pec to Long-pec](https://zfin.org/ZDB-FIG-050630-3271) |
+| *gata1a* | Segmentation (14-21 hpf) | erythrocytes 59% · 1.00 | ventral mesoderm | [14-19 somites](https://zfin.org/ZDB-FIG-060130-310) |
+|  | Pharyngula (24-34 hpf) | erythrocytes 81% · 0.80 | blood, intermediate cell mass of mesoderm | [20-25 somites to Prim-5](https://zfin.org/ZDB-FIG-060130-311) · [Prim-15 to Prim-25](https://zfin.org/ZDB-FIG-060130-148) |
+| *mpx* | Pharyngula (24-34 hpf) | immune cells 24% · 0.84 | macrophage | [20-25 somites to Prim-5](https://zfin.org/ZDB-FIG-050630-6642) · [Prim-15 to Prim-25](https://zfin.org/ZDB-FIG-050630-14026) |
+|  | Hatching (48-58 hpf) | immune cells 32% · 1.00 | macrophage | [High-pec to Long-pec](https://zfin.org/ZDB-FIG-050630-7110) |
+| *tbxta* | Segmentation (14-21 hpf) | notochord 94% · 0.94; paraxial mesoderm (tail bud) 95% · 0.79 | notochord, tail bud | [14-19 somites](https://zfin.org/ZDB-FIG-050630-6935) |
+|  | Pharyngula (24-34 hpf) | notochord 94% · 0.88 | notochord | [20-25 somites to Prim-5](https://zfin.org/ZDB-FIG-050630-14844) · [Prim-15 to Prim-25](https://zfin.org/ZDB-FIG-050630-131) |
+
+**In brief:**
+
+- ***cdh17***: Pronephros-specific at every stage; the cleanest match.
+- ***gata1a***: Erythroid lineage only; Thisse marks ventral mesoderm, then ICM and blood.
+- ***mpx***: Only in immune cells, in a subset (24–32%) consistent with a single myeloid subtype (neutrophils).
+- ***tbxta***: Notochord at every stage, plus tail-bud progenitors during segmentation.
+
+The other three stages of these genes (*gata1a* and *tbxta* at hatching, *mpx* at segmentation) had no Thisse ISH annotation and were not scored. Daniocell still detects *tbxta* in 74% of notochord cells at 48–58 hpf, a prediction that could be checked by ISH.
+
 **What the results tell us**
 
 - **Single-tissue genes work well.** When a gene is confined to one tissue that Daniocell captures as its own cluster, the simulation matches the ISH.
@@ -101,7 +126,7 @@ The tool is a single self-contained HTML page with no server or external librari
 
 | File | Purpose |
 |---|---|
-| `data.json` | Daniocell values and ZFIN ISH terms for each gene and stage |
+| `data.json` | Daniocell values, ZFIN ISH terms, Thisse figure IDs and gene notes for each gene and stage |
 | `logic.js` | Region definitions, mapping tables, calling thresholds and scoring |
 | `template.html` | Page layout and interactivity |
 | `build.py` | Combines the three files above into `index.html` (`python3 build.py`) |

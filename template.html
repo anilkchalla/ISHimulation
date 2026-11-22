@@ -65,6 +65,21 @@
   .opt h4{margin:0 0 6px;font-size:15px}
   details{margin-top:8px} summary{cursor:pointer;color:var(--link);font-weight:600}
   a{color:var(--link)}
+  .excard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px;background:#fff}
+  .exhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;align-items:baseline}
+  .exgene{font-size:19px;font-weight:700;font-style:italic}
+  .extable td{vertical-align:top}
+  .extable td:last-child{width:120px}
+  .exrow{display:grid;grid-template-columns:minmax(90px,130px) minmax(60px,1fr) 80px;gap:8px;align-items:center;font-size:13px;margin:2px 0}
+  .exlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .extrack{background:#eef2f1;border-radius:3px;height:10px;display:block}
+  .exbar{display:block;height:10px;border-radius:3px;background:var(--stain)}
+  .exval{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;white-space:nowrap}
+  @media (max-width:600px){.extable tr:first-child{display:none}.extable tr{display:block;border-bottom:1px solid var(--line);padding:8px 0}.extable td{display:block;border:0;padding:3px 0;width:auto!important}.extable .cell{max-width:160px}}
+  .article p{max-width:78ch;margin:0 0 12px;line-height:1.65}
+  .article h3{margin:18px 0 6px;font-size:15.5px}
+  .refs{padding-left:18px;font-size:13.5px;max-width:78ch}
+  .refs li{margin-bottom:4px}
   footer{max-width:1240px;margin:auto;padding:0 32px 40px;color:var(--muted);font-size:13px}
   code{background:#f2ede3;padding:1px 5px;border-radius:4px;font-size:12.5px}
 </style>
@@ -72,7 +87,7 @@
 <body>
 <header>
   <h1>ISHimulation Tool</h1>
-  <p class="sub">Simulated whole-mount ISH from single-cell data. Approach 1 prototype: a Daniocell cell-type map painted onto a cartoon embryo, scored against Thisse whole-mount ISH annotations (ZFIN).</p>
+  <p class="sub">Simulated whole-mount ISH from single-cell data. Prototype: a Daniocell cell-type map painted onto a cartoon embryo, scored against Thisse whole-mount ISH annotations (ZFIN).</p>
   <div class="banner"><b>Research and hypothesis generation only.</b> The teal maps are <i>predictions</i> from cluster-level scRNA-seq averages, not images of real embryos. Check every pattern against the original ISH before you use it.</div>
 </header>
 <!-- ISHimulation abstract box: insert directly after </header> -->
@@ -161,37 +176,45 @@
   <table id="failTable"></table>
 </section>
 
-<section aria-labelledby="dec-h">
-  <h2 id="dec-h">3. Decision: is approach 2 or 3 worth it?</h2>
-  <div id="decisionText"></div>
-  <div class="decision">
-    <div class="opt rec">
-      <h4>Next: Approach 1b (recommended)</h4>
-      <p style="margin:0">Map Daniocell's <b>sub-clusters</b> (e.g., <code>neur.6</code> "progenitors – midbrain and hindbrain", <code>neur.18</code> "hindbrain – lateral") to cartoon sub-regions (MHB, rhombomeres, epiphysis, optic stalk). Same pipeline, finer table. A quick check of <i>egr2b</i> shows strong signal in <code>neur.6</code> that the coarse "neural" group dilutes.</p>
-    </div>
-    <div class="opt">
-      <h4>Approach 2: landmark mapping</h4>
-      <p style="margin:0">Worth it <b>only for the brain and neural tube</b>, where ISH patterns are finer than any cluster. It won't fix genes Daniocell barely detects, and it needs a curated landmark-gene panel for each stage.</p>
-    </div>
-    <div class="opt">
-      <h4>Approach 3: spatial-reference mapping</h4>
-      <p style="margin:0">Not worth it yet. It fixes the same resolution misses as approach 2 at much higher cost, and only for stages a spatial atlas covers. Revisit if approach 1b still misses along the head-to-tail axis.</p>
-    </div>
-  </div>
+<section aria-labelledby="ex-h">
+  <h2 id="ex-h">3. Where the simulation agrees with ISH</h2>
+  <p class="muted" style="margin-top:0">The 9 concordant gene–stage pairs come from four genes. For each one, the table shows the Daniocell groups that drive the simulation and links to the matching Thisse ISH figures in ZFIN. Bar length = % of cells expressing; bar darkness = relative mean expression. Click a score to load that stage in the map.</p>
+  <div id="examples"></div>
+  <p class="muted" style="font-size:12.5px;margin:10px 0 0">ISH images are the copyrighted work of their authors and are displayed by ZFIN with permission, so they are linked here rather than reproduced.</p>
 </section>
 
-<section aria-labelledby="meth-h">
-  <h2 id="meth-h">Methods and caveats</h2>
-  <ul>
-    <li><b>Predicted.</b> For each gene, Daniocell's "all cells" dot plot was parsed (dot size → % cells expressing; dot color → mean expression on that gene's own color scale, rescaled 0–1, approximate). Each tissue group was assigned to one cartoon region. A region is <i>called</i> when any of its groups has ≥ <span class="tP2"></span>% of cells expressing and ≥ <span class="tE2"></span> relative expression.</li>
-    <li><b>Observed.</b> ZFIN wild-type expression annotations from the Thisse high-throughput ISH screens (ZDB-PUB-010810-1, -040907-1, -051025-1, -080227-22), grouped into Thisse stage bins and mapped to the same regions.</li>
-    <li><b>Stage matching.</b> Segmentation = Daniocell 14–21 hpf vs Thisse 14–19 somites. Pharyngula = 24–34 hpf vs 20–25 somites to Prim-25. Hatching = 48–58 hpf vs High-pec to Long-pec (42–48 hpf, so slightly earlier).</li>
-    <li><b>"No ISH data"</b> means Thisse annotated nothing for that gene at that stage. That isn't proof of absence, so those cells aren't scored.</li>
-    <li><b>Known biases.</b> Ambient RNA (e.g., <i>krt4</i> shows up at low levels in almost every cluster), dissociation loss, dropout of low-expressed genes, incomplete ISH annotation (e.g., <i>pax2a</i> pronephros isn't annotated at 14–19 somites), and colors read approximately from plots rather than raw counts.</li>
-  </ul>
-  <details><summary>Full cluster → region mapping</summary><table id="mapTable" style="margin-top:8px"></table></details>
-  <details><summary>ISH term → region mapping</summary><table id="termTable" style="margin-top:8px"></table></details>
+<section aria-labelledby="dec-h" class="article">
+  <h2 id="dec-h">4. Future directions</h2>
+  <p>In this proof-of-concept evaluation, projecting cluster-level expression onto a schematic embryo reproduced observed ISH patterns in <span id="fdOK"></span> of <span id="fdN"></span> scored gene–stage pairs (mean Jaccard index <span id="fdMean"></span>). Agreement was highest for genes whose expression is confined to a single tissue that Daniocell resolves as a discrete cluster, including <i>cdh17</i> in the pronephros, <i>gata1a</i> in the erythroid lineage, <i>mpx</i> in myeloid cells and <i>tbxta</i> in the notochord. Discordant and partially concordant pairs fell into two categories that call for different remedies.</p>
+  <p>The first category reflects limited anatomical resolution. In <span id="fdRes"></span> scored pairs, the ISH annotation named a structure finer than any Daniocell tissue group, such as the midbrain–hindbrain boundary, individual rhombomeres, the epiphysis or the optic stalk. Because the current projection assigns each broad group to a single region, spatially restricted neural genes such as <i>pax2a</i> and <i>egr2b</i> are diluted within the large "neural" group. A first revision will therefore project Daniocell sub-clusters onto correspondingly finer cartoon regions. A preliminary inspection supports this approach: <i>egr2b</i> expression is strong in the sub-cluster annotated as midbrain and hindbrain progenitors (<code>neur.6</code>) but falls below the calling threshold once that sub-cluster is merged into the broader neural group.</p>
+  <p>The second category reflects limited transcript detection. In <span id="fdDet"></span> scored pairs, ISH detected expression in a region where the corresponding Daniocell groups showed little or no signal, as for <i>crx</i> and for <i>egr2b</i> before 48 hpf. Finer spatial mapping cannot recover transcripts that were not captured during single-cell profiling, so these discrepancies are better addressed by comparison with deeper or targeted datasets, or by experimental validation. Similarly, apparent expression arising from ambient RNA, as observed for <i>krt4</i>, may be reduced by applying ambient-RNA correction before projection.</p>
+  <p>More computationally intensive strategies may be warranted for structures that remain unresolved after sub-cluster projection. Landmark-based spatial inference, in which cells are assigned positions using a panel of genes with known ISH patterns (as in the original Seurat framework; Satija et al., 2015), could resolve neural domains along the anterior–posterior axis, although it requires a curated landmark panel for each developmental stage. Integration with spatial transcriptomic references using mapping methods such as Tangram (Biancalani et al., 2021) or novoSpaRc (Nitzan et al., 2019) offers the highest potential resolution but is limited to the stages and tissue sections those references cover. We will evaluate these approaches only for regions in which sub-cluster projection fails to improve agreement. Future versions will also expand the gene set, add intermediate developmental stages and replace estimates read from published plots with values computed directly from Daniocell count data.</p>
 </section>
+
+<section aria-labelledby="meth-h" class="article">
+  <h2 id="meth-h">5. Methods</h2>
+  <h3>Data sources</h3>
+  <p>Single-cell expression data were obtained from Daniocell (Sur et al., 2023), a whole-embryo single-cell RNA-sequencing atlas of zebrafish development. For each gene, the fraction of cells expressing the transcript and the mean expression level were extracted for every tissue group from the gene's published dot plot, in which dot size encodes the percentage of expressing cells and dot color encodes mean expression. Mean expression was rescaled from 0 to 1 relative to the maximum of each gene's own color scale. Because these values were estimated from dot color rather than computed from count matrices, they should be treated as approximate. Observed expression patterns were obtained from the Zebrafish Information Network (ZFIN; wild-type expression data, release of 19 November 2026), restricted to annotations from the Thisse high-throughput whole-mount ISH screens (ZFIN publications ZDB-PUB-010810-1, ZDB-PUB-040907-1, ZDB-PUB-051025-1 and ZDB-PUB-080227-22). Figure identifiers linking each annotation to its original ISH images were retrieved from the corresponding ZFIN expression, figure and image tables (release of 21 November 2026).</p>
+  <h3>Projection of single-cell expression onto embryonic anatomy</h3>
+  <p>Each of the 43 Daniocell tissue groups was assigned to one of 21 regions of a schematic lateral-view embryo, and each ZFIN anatomy term was assigned to the same set of regions. Groups without a clear anatomical counterpart (blastomeres, primordial germ cells and taste cells) were left unmapped and flagged when they carried signal. A region was classified as expressing a gene when at least one of its assigned groups contained ≥ <span class="tP2"></span>% expressing cells with a relative mean expression of ≥ <span class="tE2"></span>. Weaker signal (≥ 10% of cells and ≥ 0.15 relative expression) was displayed with reduced intensity but excluded from scoring. Display intensity for each region was calculated as relative mean expression multiplied by the fraction of expressing cells, with the fraction saturating at 60%. The complete mapping tables are provided below.</p>
+  <h3>Developmental stage matching</h3>
+  <p>Three stage windows were compared: segmentation (Daniocell 14–21 hpf; Thisse 14–19 somites), pharyngula (24–34 hpf; 20–25 somites to Prim-25) and hatching (48–58 hpf; High-pec to Long-pec). The hatching ISH window (approximately 42–48 hpf) precedes the corresponding Daniocell window, and a single schematic body plan was used for all three stages.</p>
+  <h3>Agreement scoring</h3>
+  <p>For each gene–stage pair, agreement between predicted and observed regions was quantified using the Jaccard index, defined as the number of regions identified by both sources divided by the number identified by either. Pairs were classified as concordant (J ≥ 0.67), partially concordant (0.25 ≤ J &lt; 0.67) or discordant (J &lt; 0.25). Pairs lacking a Thisse annotation were not scored, because absence of an annotation does not establish absence of expression. Each discrepancy was further classified by probable cause: anatomical resolution finer than the available clusters, signal below the calling threshold, no detection in the corresponding clusters, predicted expression without ISH support, or signal in an unmapped group.</p>
+  <h3>Limitations</h3>
+  <p>Single-cell measurements are subject to transcript dropout, loss or under-representation of fragile cell types during dissociation, and contamination by ambient RNA, the last of which likely explains the low-level <i>krt4</i> signal detected across nearly all groups. ISH annotations from high-throughput screens can be incomplete; for example, <i>pax2a</i> expression in the pronephros is not annotated at 14–19 somites. The schematic embryo is not drawn to scale and does not represent stage-specific morphology. ISHimulation is intended for research and hypothesis generation, and simulated patterns should be confirmed against the original ISH images before interpretation.</p>
+  <h3>References</h3>
+  <ul class="refs">
+    <li>Biancalani T, et al. (2021). Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. <i>Nature Methods</i> 18, 1352–1362.</li>
+    <li>Nitzan M, Karaiskos N, Friedman N, Rajewsky N. (2019). Gene expression cartography. <i>Nature</i> 576, 132–137.</li>
+    <li>Satija R, Farrell JA, Gennert D, Schier AF, Regev A. (2015). Spatial reconstruction of single-cell gene expression data. <i>Nature Biotechnology</i> 33, 495–502.</li>
+    <li>Sur A, et al. (2023). Single-cell analysis of shared signatures and transcriptional diversity during zebrafish development. <i>Developmental Cell</i> 58, 3028–3047.e12.</li>
+    <li>Thisse B, Thisse C, et al. (2001–2008). High-throughput expression analysis of zebrafish genes. ZFIN direct data submissions (zfin.org).</li>
+  </ul>
+  <details><summary>Cluster → region mapping table</summary><table id="mapTable" style="margin-top:8px"></table></details>
+  <details><summary>ISH term → region mapping table</summary><table id="termTable" style="margin-top:8px"></table></details>
+</section>
+
 </main>
 
 <footer>
@@ -339,8 +362,43 @@ function render(){
   document.getElementById('links').innerHTML =
     `<a href="https://daniocell.nichd.nih.gov/gene/${L}/${state.gene}/${state.gene}.html" target="_blank" rel="noopener">Daniocell page</a> ·
      <a href="https://zfin.org/${gene.zfin}" target="_blank" rel="noopener">ZFIN gene page (expression and ISH figures)</a> ·
-     <a href="https://zebrahub.sf.czbiohub.org/g2f" target="_blank" rel="noopener">gene2fish</a>`;
+     <a href="https://zebrahub.sf.czbiohub.org/g2f" target="_blank" rel="noopener">gene2fish</a>` +
+    figLinks(gene, state.stage, '<div style="margin-top:8px"><b>Thisse ISH figures in ZFIN:</b> ', '</div>');
   renderMatrix();
+}
+
+/* ---------- ZFIN figure links + concordant examples ---------- */
+function figLinks(gene, s, pre, post){
+  const f=(gene.figs&&gene.figs[s])||[];
+  if(!f.length) return '';
+  return pre + f.map(([id,st,n])=>`<a href="https://zfin.org/${id}" target="_blank" rel="noopener">${esc(st)}</a> <span class="muted">(${n} image${n>1?'s':''})</span>`).join(' · ') + post;
+}
+function renderExamples(){
+  const COL={Concordant:'var(--ok)',Partial:'var(--part)',Discordant:'var(--bad)','No ISH data':'var(--na)'};
+  const cards=[];
+  for(const g of GENES){
+    const gene=D.genes[g]; const sc=STAGES.map(s=>[s,scoreCell(gene,s)]);
+    const nOK=sc.filter(([s,r])=>r.verdict==='Concordant').length; if(!nOK) continue;
+    const rows=sc.map(([s,r])=>{
+      const top=(gene.dc[s]||[]).filter(([c,p,e])=>p>=5&&e>=0.12).slice().sort((a,b)=>b[1]*b[2]-a[1]*a[2]).slice(0,3);
+      const bars=top.length?top.map(([c,p,e])=>`<div class="exrow"><span class="exlab">${esc(c)}</span><span class="extrack"><span class="exbar" style="width:${p}%;opacity:${(0.3+0.7*e).toFixed(2)}"></span></span><span class="exval">${p}% · ${e.toFixed(2)}</span></div>`).join(''):'<span class="muted">no group ≥ 5% of cells</span>';
+      const ish=(gene.ish[s]||[]).length?esc(gene.ish[s].join(', ')):'<span class="muted">none annotated</span>';
+      return `<tr><td><b>${esc(D.meta.stages[s].label)}</b><br><span class="muted">${esc(D.meta.stages[s].daniocell)}</span></td>
+        <td>${bars}</td>
+        <td>${ish}${figLinks(gene,s,'<div style="margin-top:4px">',' </div>')}</td>
+        <td><button class="cell" style="background:${COL[r.verdict]}" data-g="${g}" data-s="${s}" aria-label="Load ${g} ${D.meta.stages[s].label} in the map">${r.verdict}<small>${r.jaccard===null?'not scored':'J = '+r.jaccard.toFixed(2)}</small></button></td></tr>`;
+    }).join('');
+    const L=g[0].toUpperCase();
+    cards.push(`<div class="excard"><div class="exhead"><div><span class="exgene">${g}</span> <span class="muted">${esc(gene.name)}</span></div>
+      <div class="muted" style="font-size:13px">${nOK} concordant stage${nOK>1?'s':''} ·
+      <a href="https://daniocell.nichd.nih.gov/gene/${L}/${g}/${g}.html" target="_blank" rel="noopener">Daniocell</a> ·
+      <a href="https://daniocell.nichd.nih.gov/gene/${L}/${g}/${g}_dotplot_all.svg" target="_blank" rel="noopener">dot plot</a> ·
+      <a href="https://zfin.org/${gene.zfin}" target="_blank" rel="noopener">ZFIN</a></div></div>
+      <p style="margin:6px 0 10px">${esc(gene.note||'').replace(new RegExp('\\b'+g.replace('.','\\.')+'\\b','g'),'<i>'+g+'</i>')}</p>
+      <div style="overflow-x:auto"><table class="extable"><tr><th>Stage</th><th>Daniocell scRNA-seq: top groups (% cells · rel. expression)</th><th>Thisse ISH (ZFIN)</th><th>Score</th></tr>${rows}</table></div></div>`);
+  }
+  const box=document.getElementById('examples'); box.innerHTML=cards.join('');
+  box.querySelectorAll('.cell').forEach(b=>b.onclick=()=>{state.gene=b.dataset.g;state.stage=b.dataset.s;render();document.getElementById('explorer-h').scrollIntoView({behavior:'smooth'});});
 }
 
 /* ---------- tooltip ---------- */
@@ -383,14 +441,15 @@ function renderMatrix(){
     [n,'gene × stage pairs scored'],[mean.toFixed(2),'mean Jaccard'],
     [tally.Concordant||0,'concordant'],[tally.Partial||0,'partial'],[tally.Discordant||0,'discordant']
   ].map(([v,l])=>`<div class="stat"><div class="n">${v}</div><div class="l">${l}</div></div>`).join('');
-  const FIX={resolution:['ISH pattern is finer than any cluster (MHB, hindbrain, epiphysis, optic stalk)','Approach 1b / 2 / 3'],
-    'not-detected':['Not detected in the matching groups (dropout, or dilution in a large group)','Partly 1b; 2 and 3 can\'t add molecules'],
-    'weak-signal':['Detected, but below the calling threshold','Threshold tuning or 1b'],
-    'extra-prediction':['Predicted where ISH shows nothing (ambient RNA, doublets, incomplete annotation)','Ambient-RNA correction; not 2 or 3'],
+  const FIX={resolution:['ISH pattern is finer than any cluster (MHB, hindbrain, epiphysis, optic stalk)','Sub-cluster or spatial mapping'],
+    'not-detected':['Not detected in the matching groups (dropout, or dilution in a large group)','Deeper or targeted data, or validation; spatial mapping can\'t add molecules'],
+    'weak-signal':['Detected, but below the calling threshold','Threshold tuning or sub-cluster mapping'],
+    'extra-prediction':['Predicted where ISH shows nothing (ambient RNA, doublets, incomplete annotation)','Ambient-RNA correction'],
     'unmapped-cluster':['Signal in a group with no cartoon region (blastomeres, PGCs)','Add regions']};
   document.getElementById('failTable').innerHTML='<tr><th>Failure mode</th><th class="num">Scored pairs affected</th><th>What would fix it</th></tr>'+
     Object.keys(FIX).map(k=>`<tr><td>${FIX[k][0]}</td><td class="num">${tags[k]||0} / ${n}</td><td>${FIX[k][1]}</td></tr>`).join('');
-  document.getElementById('decisionText').innerHTML=`<p style="margin-top:0">Approach 1 matched ISH fully in <b>${tally.Concordant||0} of ${n}</b> scored pairs (mean Jaccard <b>${mean.toFixed(2)}</b>). It works well for genes confined to one tissue that Daniocell resolves as a single group: <i>cdh17</i> (pronephros), <i>gata1a</i> (blood), <i>mpx</i> (myeloid) and <i>tbxta</i> (notochord). It fails in two different ways, and they need different fixes. <b>Resolution</b> (${tags.resolution||0} pairs): brain sub-domains such as the MHB, rhombomeres and epiphysis get averaged into one "neural" group. Finer mapping fixes this. <b>Sensitivity</b> (${tags['not-detected']||0} pairs): genes like <i>crx</i> and <i>egr2b</i> before 48 hpf are expressed in too few dissociated cells. No spatial-mapping method can recover molecules that weren't captured.</p>`;
+  const setT=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
+  setT('fdOK',tally.Concordant||0); setT('fdN',n); setT('fdMean',mean.toFixed(2)); setT('fdRes',tags.resolution||0); setT('fdDet',tags['not-detected']||0);
 }
 
 document.getElementById('tP').textContent=STRONG.p; document.getElementById('tE').textContent=STRONG.e;
@@ -398,6 +457,7 @@ document.querySelectorAll('.tP2').forEach(e=>e.textContent=STRONG.p); document.q
 document.getElementById('mapTable').innerHTML='<tr><th>Daniocell group</th><th>Cartoon region</th></tr>'+Object.entries(CLUSTER_TO_REGION).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v?esc(REGIONS[v]):'<i class="muted">unmapped</i>'}</td></tr>`).join('');
 document.getElementById('termTable').innerHTML='<tr><th>ZFIN term</th><th>Cartoon region</th></tr>'+Object.entries(TERM_TO_REGION).map(([k,v])=>`<tr><td>${esc(k)}${v.fine?' <span class="tag">finer</span>':''}</td><td>${v.r.length?v.r.map(x=>esc(REGIONS[x])).join(', '):'<i class="muted">not mappable</i>'}</td></tr>`).join('');
 render();
+renderExamples();
 </script>
 </body>
 </html>
